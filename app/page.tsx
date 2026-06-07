@@ -33,7 +33,7 @@ const projects: Project[] = [
       id: "Aplikasi Kasir Coffee Shop",
       en: "Coffee Shop POS App",
     },
-    stack: ["Java", "Apache NetBeans", "MySQL","css"],
+    stack: ["Java", "Apache NetBeans", "MySQL", "CSS"],
     desc: {
       id: "Aplikasi desktop untuk manajemen kasir dan inventaris coffee shop, dibangun dengan Java.",
       en: "Desktop application for cashier management and inventory tracking of a coffee shop, built with Java.",
@@ -42,7 +42,7 @@ const projects: Project[] = [
       id: "Aplikasi desktop yang dikembangkan dengan Java dan Apache NetBeans. Dilengkapi sistem kasir, manajemen inventaris produk, riwayat transaksi, dan laporan penjualan. Proyek ini dirancang untuk menyederhanakan operasional harian sebuah coffee shop.",
       en: "Desktop application developed with Java and Apache NetBeans. Features a cashier system, product inventory management, transaction history, and sales reports. Designed to simplify daily operations of a coffee shop.",
     },
-    highlights: ["java"],
+    highlights: ["spring", "mysql", "css"],
     media: [
       "/projects/coffee-shop/1-login.png",
       "/projects/coffee-shop/2-admin.png",
@@ -57,7 +57,7 @@ const projects: Project[] = [
       id: "Website E-Commerce / Profil UMKM",
       en: "E-Commerce / SME Profile Website",
     },
-    stack: ["Laravel", "PHP", "MySQL", "Xampp","css","Git"],
+    stack: ["Laravel", "PHP", "MySQL", "XAMPP", "CSS", "Bootstrap", "Git", "GitHub"],
     desc: {
       id: "Website e-commerce dan profil untuk UMKM dengan panel admin, autentikasi, dan manajemen data.",
       en: "E-commerce and profile website for a small business with admin dashboard, authentication, and data management.",
@@ -66,7 +66,7 @@ const projects: Project[] = [
       id: "Website lengkap untuk usaha kecil dan menengah yang dibangun dengan Laravel. Mencakup katalog produk, keranjang belanja, panel admin untuk manajemen inventaris dan pesanan, sistem autentikasi pengguna, serta manajemen data bisnis.",
       en: "Full-featured website for small and medium businesses built with Laravel. Includes product catalogue, shopping cart, admin panel for inventory and order management, user authentication system, and business data management.",
     },
-    highlights: ["laravel", "php", "mysql","Xampp","css","Git"],
+    highlights: ["laravel", "php", "mysql", "css", "bootstrap", "git", "github"],
     media: [
       "/projects/umkm/1-daftar.png",
       "/projects/umkm/2-masuk.png",
@@ -81,7 +81,7 @@ const projects: Project[] = [
       id: "Aplikasi Manajemen Bengkel",
       en: "Workshop Management App",
     },
-    stack: ["Laravel", "PHP", "MySQL", "Xampp","css","Git"],
+    stack: ["Laravel", "PHP", "MySQL", "XAMPP", "CSS", "Bootstrap", "Git", "GitHub"],
     desc: {
       id: "Sistem untuk bengkel: pencatatan sparepart keluar-masuk, kalkulasi biaya jasa montir, dan riwayat servis kendaraan.",
       en: "System for auto workshops: spare parts tracking, mechanic labor cost calculation, and vehicle service history.",
@@ -90,7 +90,7 @@ const projects: Project[] = [
       id: "Aplikasi web berbasis Laravel untuk manajemen bengkel secara menyeluruh. Memungkinkan pencatatan keluar-masuk sparepart, kalkulasi otomatis biaya jasa montir, dan riwayat servis lengkap per kendaraan. Memudahkan kontrol operasional dan keuangan bengkel.",
       en: "Web application built with Laravel for comprehensive auto workshop management. Tracks spare parts in and out, automatically calculates mechanic labor costs, and maintains a complete service history per vehicle. Streamlines operational and financial control of the workshop.",
     },
-    highlights: ["laravel", "php", "mysql", "Xampp","css","Git"],
+    highlights: ["laravel", "php", "mysql", "css", "bootstrap", "git", "github"],
     media: [
       "/projects/bengkel/1-login.png",
       "/projects/bengkel/2-dashboard.png",
@@ -105,7 +105,7 @@ const projects: Project[] = [
       id: "Madiun Sigap — Platform Layanan Publik",
       en: "Madiun Sigap — Public Services Platform",
     },
-    stack: ["Next.js", "JavaScript", "TypeScript","css","Git"],
+    stack: ["Next.js", "JavaScript", "TypeScript","React", "CSS", "Git", "GitHub"],
     desc: {
       id: "Website layanan publik Kabupaten Madiun dengan fitur pengaduan masyarakat, pengelolaan data, dan sistem pelayanan publik.",
       en: "Public services website for Madiun regency with citizen complaint system and data management.",
@@ -114,7 +114,7 @@ const projects: Project[] = [
       id: "Platform web berbasis Node.js untuk Kabupaten Madiun. Memungkinkan warga mengirim pengaduan dan permintaan layanan publik, dengan panel manajemen untuk petugas. Dilengkapi sistem pelacakan kasus, notifikasi, dan laporan pelayanan warga.",
       en: "Web platform built with Node.js for Madiun Regency. Allows citizens to submit complaints and public service requests, with a management panel for officials. Includes case tracking, notifications, and citizen service reports.",
     },
-    highlights: ["node.js", "javascript", "TypeScript", "css","Git"],
+    highlights: ["nodedotjs", "nextdotjs", "react", "javascript", "typescript", "css", "git", "github"],
     media: [
       "/projects/madiun-siaga/1-dashboard.png",
       "/projects/madiun-siaga/2-laporan.png",

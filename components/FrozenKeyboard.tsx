@@ -20,21 +20,21 @@ import { useSeason } from "@/components/SeasonProvider";
 import { useLanguage } from "@/components/LanguageProvider";
 import * as THREE from "three";
 import {
+  siBootstrap,
   siCss,
-  siDocker,
   siGit,
+  siGithub,
   siHtml5,
   siJavascript,
+  siLaravel,
+  siMysql,
   siNextdotjs,
   siNodedotjs,
-  siOdoo,
   siPhp,
-  siPostgresql,
   siPython,
   siReact,
-  siTailwindcss,
+  siSpring,
   siTypescript,
-  siVuedotjs,
 } from "simple-icons";
 
 const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -298,9 +298,9 @@ const FRAME_TARGET: [number, number, number] = [-1.0, 0, 0];
 type SkillIcon = { title: string; slug: string; path: string; hex: string };
 
 const SKILLS: readonly (readonly SkillIcon[])[] = [
-  [siJavascript, siTypescript, siHtml5, siCss, siTailwindcss],
-  [siPython, siReact, siNextdotjs, siVuedotjs, siNodedotjs],
-  [siPhp, siOdoo, siPostgresql, siDocker, siGit],
+  [siJavascript, siTypescript, siHtml5, siCss, siBootstrap],
+  [siPython, siReact, siNextdotjs, siSpring, siNodedotjs],
+  [siPhp, siLaravel, siMysql, siGithub, siGit],
 ] as const;
 
 const COLS = 5;

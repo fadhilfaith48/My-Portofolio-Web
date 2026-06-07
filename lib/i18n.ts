@@ -120,6 +120,10 @@ export const DICT = {
         id: "Utility-first. Desain langsung di HTML.",
         en: "Utility-first. Design inside the HTML.",
       },
+      bootstrap: {
+        id: "Komponen siap pakai, tampil rapi dalam hitungan menit.",
+        en: "Ready-made components, looking sharp in minutes.",
+      },
       python: {
         id: "Dibaca seperti bahasa manusia, skalanya seperti roket.",
         en: "Reads like English, scales like a rocket.",
@@ -132,9 +136,9 @@ export const DICT = {
         id: "React yang sudah dewasa: routing, SSR, edge.",
         en: "React all grown up: routing, SSR, edge.",
       },
-      vuedotjs: {
-        id: "Frontend yang paling santai.",
-        en: "The most relaxed frontend.",
+      spring: {
+        id: "Framework Java yang powerful untuk aplikasi enterprise.",
+        en: "The powerful Java framework for enterprise applications.",
       },
       nodedotjs: {
         id: "JavaScript di sisi server.",
@@ -159,6 +163,22 @@ export const DICT = {
       git: {
         id: "Sejarah dan mesin waktu untuk kode.",
         en: "History and a time machine for your code.",
+      },
+      visualstudiocode: {
+        id: "Editor yang paling banyak dipakai developer di dunia.",
+        en: "The most used code editor by developers worldwide.",
+      },
+      github: {
+        id: "Rumah untuk kode dan kolaborasi developer.",
+        en: "Where code lives and developers collaborate.",
+      },
+      laravel: {
+        id: "Framework PHP yang elegan dan powerful.",
+        en: "The elegant PHP framework for web artisans.",
+      },
+      mysql: {
+        id: "Database relasional yang paling populer.",
+        en: "The world's most popular relational database.",
       },
     },
   },
