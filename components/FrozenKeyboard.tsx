@@ -135,6 +135,18 @@ const SECTION_STATES: Record<string, KeyboardState> = {
     posZ: 0,
     scale: 0.95,
   },
+  // GitHub — the section renders full-width stat cards, so the keyboard
+  // drops to the lower-right corner at a modest tilt, similar to the stack
+  // pose but slightly smaller so it never fights the cards for attention.
+  github: {
+    yaw: Math.PI * 0.35,
+    pitch: Math.PI * 0.1,
+    roll: Math.PI * -0.02,
+    posX: 1.6,
+    posY: -1.4,
+    posZ: 0,
+    scale: 1.05,
+  },
   // Contact — mirrors the hero pose (same yaw/pitch/roll and scale) but
   // pushed to the right so the "¿Hablamos?" copy can sit on the left. The
   // Keyboard component also reuses the hero-style cinematic idle swing

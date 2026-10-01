@@ -8,6 +8,7 @@ import SectionNav from "@/components/SectionNav";
 import CopyEmail from "@/components/CopyEmail";
 import SeasonPicker from "@/components/SeasonPicker";
 import LanguagePicker from "@/components/LanguagePicker";
+import GitHubActivity from "@/components/GitHubActivity";
 import ProjectModal, {
   type ProjectDetail,
 } from "@/components/ProjectModal";
@@ -57,7 +58,7 @@ const projects: Project[] = [
       id: "Website E-Commerce / Profil UMKM",
       en: "E-Commerce / SME Profile Website",
     },
-    stack: ["Laravel", "PHP", "MySQL", "XAMPP", "CSS", "Bootstrap", "Git", "GitHub"],
+    stack: ["Laravel", "PHP", "MySQL", "Xampp","css","Git"],
     desc: {
       id: "Website e-commerce dan profil untuk UMKM dengan panel admin, autentikasi, dan manajemen data.",
       en: "E-commerce and profile website for a small business with admin dashboard, authentication, and data management.",
@@ -66,7 +67,7 @@ const projects: Project[] = [
       id: "Website lengkap untuk usaha kecil dan menengah yang dibangun dengan Laravel. Mencakup katalog produk, keranjang belanja, panel admin untuk manajemen inventaris dan pesanan, sistem autentikasi pengguna, serta manajemen data bisnis.",
       en: "Full-featured website for small and medium businesses built with Laravel. Includes product catalogue, shopping cart, admin panel for inventory and order management, user authentication system, and business data management.",
     },
-    highlights: ["laravel", "php", "mysql", "css", "bootstrap", "git", "github"],
+    highlights: ["laravel", "php", "mysql","Xampp","css","Git"],
     media: [
       "/projects/umkm/1-daftar.png",
       "/projects/umkm/2-masuk.png",
@@ -81,7 +82,7 @@ const projects: Project[] = [
       id: "Aplikasi Manajemen Bengkel",
       en: "Workshop Management App",
     },
-    stack: ["Laravel", "PHP", "MySQL", "XAMPP", "CSS", "Bootstrap", "Git", "GitHub"],
+    stack: ["Laravel", "PHP", "MySQL", "Xampp","css","Git"],
     desc: {
       id: "Sistem untuk bengkel: pencatatan sparepart keluar-masuk, kalkulasi biaya jasa montir, dan riwayat servis kendaraan.",
       en: "System for auto workshops: spare parts tracking, mechanic labor cost calculation, and vehicle service history.",
@@ -90,7 +91,7 @@ const projects: Project[] = [
       id: "Aplikasi web berbasis Laravel untuk manajemen bengkel secara menyeluruh. Memungkinkan pencatatan keluar-masuk sparepart, kalkulasi otomatis biaya jasa montir, dan riwayat servis lengkap per kendaraan. Memudahkan kontrol operasional dan keuangan bengkel.",
       en: "Web application built with Laravel for comprehensive auto workshop management. Tracks spare parts in and out, automatically calculates mechanic labor costs, and maintains a complete service history per vehicle. Streamlines operational and financial control of the workshop.",
     },
-    highlights: ["laravel", "php", "mysql", "css", "bootstrap", "git", "github"],
+    highlights: ["laravel", "php", "mysql", "Xampp","css","Git"],
     media: [
       "/projects/bengkel/1-login.png",
       "/projects/bengkel/2-dashboard.png",
@@ -105,7 +106,7 @@ const projects: Project[] = [
       id: "Madiun Sigap — Platform Layanan Publik",
       en: "Madiun Sigap — Public Services Platform",
     },
-    stack: ["Next.js", "JavaScript", "TypeScript","React", "CSS", "Git", "GitHub"],
+    stack: ["Next.js", "JavaScript", "TypeScript","css","Git"],
     desc: {
       id: "Website layanan publik Kabupaten Madiun dengan fitur pengaduan masyarakat, pengelolaan data, dan sistem pelayanan publik.",
       en: "Public services website for Madiun regency with citizen complaint system and data management.",
@@ -153,8 +154,8 @@ const experiences: Array<{
         en: "Built e-commerce and profile websites for small businesses with Laravel, including admin panel and authentication.",
       },
       {
-        id: "Mengembangkan 'Madiun Siaga', platform layanan publik dengan Node.js untuk pengelolaan pengaduan masyarakat.",
-        en: "Developed 'Madiun Siaga', a public services platform with Node.js for citizen complaint management.",
+        id: "Mengembangkan 'Madiun Sigap', platform layanan publik dengan Node.js untuk pengelolaan pengaduan masyarakat.",
+        en: "Developed 'Madiun Sigap', a public services platform with Node.js for citizen complaint management.",
       },
       {
         id: "Berpartisipasi dalam kompetisi teknologi: Inotek Kabupaten Madiun dan Festika Jatim (AREK_AI 2025).",
@@ -541,6 +542,9 @@ export default function Home() {
               </div>
             </section>
           ))}
+
+          {/* GitHub Activity */}
+          <GitHubActivity />
 
           {/* Contact — copy pinned to the left so the (large, hero-posed)
               keyboard on the right has room to bob its random keys. */}
