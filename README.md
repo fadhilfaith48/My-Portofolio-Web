@@ -1,21 +1,19 @@
-# 3D Developer Portfolio
+# Portfolio — Fadhil Faith
 
-An immersive, interactive developer portfolio built with **Next.js 16**, **React Three Fiber**, and **Tailwind CSS v4**. Features a 3D mechanical keyboard hero scene, seasonal themes, smooth scroll animations, bilingual support (ES/EN), and a fully responsive design.
-
-**[Live Demo](https://txemaalbero.com)** &nbsp;|&nbsp; **Built by [Txema Albero](https://es.linkedin.com/in/jose-mar%C3%ADa-albero-belamendia-b9319a246)**
+An immersive developer portfolio built with **Next.js 16**, **React Three Fiber**, and **Tailwind CSS v4**. A 3D mechanical keyboard reacts to the section you're reading, the whole UI re-themes across four seasons, and a GitHub activity panel shows live contribution data.
 
 ---
 
 ## Highlights
 
-- **Interactive 3D Keyboard** — A full mechanical keyboard rendered with React Three Fiber and Three.js. Keys react to real keypresses with physics-based animations and sound effects.
-- **Seasonal Themes** — Four complete visual themes (Winter, Spring, Summer, Autumn) that re-skin the entire UI — colours, gradients, and 3D scene lighting — with a single click.
-- **Project Showcases** — Modal dialogs with image carousels, tech stack chips, and links to live demos and source code.
-- **Bilingual (ES/EN)** — Lightweight custom i18n layer with zero external dependencies. Language toggle persists across sections.
-- **Smooth Scroll & Reveal Animations** — Powered by [Lenis](https://github.com/darkroomengineering/lenis) for buttery smooth scrolling with intersection-observer-based reveal effects.
-- **Custom Cursor & Magnetic Targets** — A custom cursor that morphs on interactive elements, with magnetic snap behaviour on buttons.
-- **Responsive & Mobile-First** — Optimised for recruiters reviewing on phones. WebGL performance and touch interactions are first-class concerns.
-- **Security Headers** — HSTS, X-Frame-Options, Content-Type-Options, Referrer-Policy, and Permissions-Policy configured out of the box.
+- **Interactive 3D keyboard** — A full mechanical keyboard rendered with React Three Fiber. Keys light up and bounce to match the section in view, with synthesised switch sounds on hover.
+- **Section-aware scene** — An `IntersectionObserver` tracks `[data-kb-section]` elements and tweens the keyboard between poses. Project sections light the matching keycaps, and scrolling between two projects triggers a flip.
+- **Seasonal themes** — Four themes (Winter, Spring, Summer, Autumn) that re-skin every CSS token *and* the 3D scene lighting, keyboard body colour, and particles.
+- **Live GitHub activity** — Server-side proxy (`/api/github`) with an in-memory cache, plus a contribution heatmap and monthly bar chart.
+- **Project modals** — Fullscreen dialogs with image carousels, tech-stack chips, and optional source/live links.
+- **Bilingual (ID/EN)** — A small custom i18n layer with no external dependency. Both preferences persist in `localStorage` and are applied before hydration to avoid a flash.
+- **Smooth scroll & reveal** — [Lenis](https://github.com/darkroomengineering/lenis) for inertial scrolling, `IntersectionObserver` reveal animations, and a scroll-progress bar.
+- **Security headers** — HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy` applied to every response.
 
 ## Tech Stack
 
@@ -27,7 +25,7 @@ An immersive, interactive developer portfolio built with **Next.js 16**, **React
 | Scroll | [Lenis](https://github.com/darkroomengineering/lenis) |
 | Icons | [Simple Icons](https://simpleicons.org/) (tech logos on 3D keycaps) |
 | Language | TypeScript |
-| Deploy | Vercel / Docker |
+| Deploy | Docker (standalone output) |
 
 ## Getting Started
 
@@ -39,131 +37,107 @@ An immersive, interactive developer portfolio built with **Next.js 16**, **React
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/Txemalon/3d-portfolio.git
-cd 3d-portfolio
-
-# Install dependencies
+git clone https://github.com/fadhilfaith48/My-Portofolio-Web.git
+cd My-Portofolio-Web
 npm install
-
-# Start the development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Build for Production
+### Scripts
 
-```bash
-npm run build
-npm start
-```
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Dev server with Turbopack |
+| `npm run build` | Production build |
+| `npm start` | Serve the production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
 
 ### Docker
 
-The project includes a multi-stage Dockerfile optimised for production (standalone output, ~100 MB final image):
+The multi-stage `Dockerfile` uses `output: "standalone"`, so the runtime image ships no `npm` and no `node_modules` — just `node server.js` as a non-root user.
 
 ```bash
-docker build -t 3d-portfolio .
-docker run -p 3000:3000 3d-portfolio
+docker build -t portfolio .
+docker run -p 3000:3000 portfolio
 ```
 
 ## Project Structure
 
 ```
 ├── app/
-│   ├── globals.css        # Tailwind + CSS custom properties (seasonal themes)
-│   ├── layout.tsx         # Root layout with providers
-│   └── page.tsx           # Home page with all sections
+│   ├── api/github/route.ts # Server-side GitHub proxy (shared quota + cache)
+│   ├── globals.css         # Tailwind + seasonal CSS custom properties
+│   ├── layout.tsx          # Root layout, providers, pre-hydration boot scripts
+│   └── page.tsx            # Home page: all sections + project data
 ├── components/
-│   ├── FrozenKeyboard.tsx # 3D keyboard scene (R3F)
-│   ├── FrozenBackground.tsx # Animated background particles
-│   ├── Carousel.tsx       # Image carousel for project modals
-│   ├── ProjectModal.tsx   # Fullscreen project detail dialog
-│   ├── SeasonProvider.tsx # Seasonal theme context
-│   ├── SeasonPicker.tsx   # Theme switcher UI
-│   ├── LanguageProvider.tsx # i18n context
-│   ├── LanguagePicker.tsx # Language toggle
-│   ├── CustomCursor.tsx   # Custom cursor with hover states
-│   ├── MagneticTargets.tsx# Magnetic snap on interactive elements
-│   ├── Reveal.tsx         # Scroll-triggered reveal animations
-│   ├── SectionNav.tsx     # Dot navigation sidebar
-│   ├── ScrollProgress.tsx # Scroll progress indicator
-│   ├── CopyEmail.tsx      # Copy-to-clipboard button
-│   └── smooth-scroll.tsx  # Lenis smooth scroll wrapper
+│   ├── FrozenKeyboard.tsx  # 3D keyboard scene (R3F) + section poses
+│   ├── FrozenBackground.tsx# Aurora + particle canvas background
+│   ├── GitHubActivity.tsx  # Stats table, bar chart, contribution heatmap
+│   ├── ProjectModal.tsx    # Fullscreen project dialog
+│   ├── Carousel.tsx        # Image carousel with auto-advance
+│   ├── SeasonProvider.tsx  # Season context + pre-hydration boot script
+│   ├── LanguageProvider.tsx# i18n context + pre-hydration boot script
+│   ├── SeasonPicker.tsx    # Theme switcher
+│   ├── LanguagePicker.tsx  # ID/EN toggle
+│   ├── Reveal.tsx          # Scroll-triggered reveal (callback ref + observer)
+│   ├── SectionNav.tsx      # Dot navigation sidebar
+│   ├── ScrollProgress.tsx  # Scroll progress indicator
+│   ├── CustomCursor.tsx    # Ambient cursor halo
+│   ├── MagneticTargets.tsx # Magnetic pull on `[data-magnetic]` elements
+│   ├── CopyEmail.tsx       # Copy-to-clipboard with toast
+│   └── smooth-scroll.tsx   # Lenis wrapper
 ├── lib/
-│   ├── i18n.ts            # Bilingual dictionary (ES/EN)
-│   └── seasons.ts         # Season theme definitions
+│   ├── i18n.ts             # ID/EN dictionary
+│   └── seasons.ts          # Season palettes
 ├── public/
-│   ├── fonts/             # 3D text typefaces
-│   ├── projects/          # Project screenshots
-│   └── sounds/            # Keyboard sound effects
-├── Dockerfile             # Multi-stage production build
-├── next.config.ts         # Standalone output + security headers
-└── package.json
+│   ├── fonts/              # 3D text typefaces
+│   ├── projects/           # Project screenshots
+│   └── sounds/             # Keyboard switch sounds
+├── Dockerfile              # Multi-stage production build
+└── next.config.ts          # Standalone output + security headers
 ```
 
 ## Customisation
 
-### Adding a Project
+### Adding a project
 
-Projects are defined in `app/page.tsx` in the `projects` array. Each entry supports:
+Projects live in the `projects` array in `app/page.tsx`:
 
 ```typescript
 {
   num: "05",
-  name: { es: "Mi Proyecto", en: "My Project" },
-  stack: ["Next.js", "TypeScript"],
-  desc: { es: "Descripción corta", en: "Short description" },
-  details: { es: "Descripción larga...", en: "Long description..." },
-  url: "https://myproject.com",          // optional — adds "View Site" button
-  github: "https://github.com/user/repo", // optional — adds "View Code" button
-  media: ["/projects/my-project/1.png"], // optional — carousel screenshots
-  highlights: ["nextdotjs", "typescript"], // simple-icons slugs for 3D keyboard
-  badge: { es: "En desarrollo", en: "In progress" }, // optional status badge
-  align: "left",                         // card alignment
-  section: "project5",                   // data attribute for scroll nav
+  name: { id: "Nama Proyek", en: "Project Name" },
+  stack: ["Next.js", "TypeScript"],          // shown as chips
+  desc: { id: "Deskripsi singkat", en: "Short copy" },
+  details: { id: "Deskripsi panjang...", en: "Long copy" },
+  url: "https://myproject.com",             // optional — "Buka situs" button
+  github: "https://github.com/user/repo",   // optional — "Lihat kode" button
+  badge: { id: "Dikerjakan", en: "In progress" }, // optional status badge
+  media: ["/projects/my-project/1.png"],    // carousel screenshots
+  highlights: ["nextdotjs", "typescript"],  // simple-icons slugs to light up
+  align: "left",                            // card alignment
+  section: "project5",                      // scroll-nav + scene id
 }
 ```
 
-### Changing Themes
+`highlights` must be **simple-icons slugs** (lowercase, no spaces) and must match a keycap in `SKILLS` in `components/FrozenKeyboard.tsx` — an unknown slug simply never lights up. A new section id also needs a matching entry in `SECTION_STATES` and in the `SectionNav` list.
 
-Seasonal colour tokens are defined as CSS custom properties in `app/globals.css` under `[data-season="..."]` selectors. Edit or add new seasons there.
+### Changing themes
+
+Colour tokens live in `app/globals.css` under `:root` and `[data-season="..."]`, and are exposed to Tailwind through the `@theme inline` block. A few colours that can't reach CSS variables from inside a canvas (keyboard body, particles) are duplicated in `lib/seasons.ts`.
 
 ### Translations
 
-All UI strings live in `lib/i18n.ts` as a flat dictionary with `{ es, en }` leaves. Add new keys or languages by extending the structure.
+All UI strings live in `lib/i18n.ts` as a nested dictionary whose leaves carry `{ id, en }`. `translate()` returns the path itself when a key is missing, so a typo shows up visibly rather than rendering as blank.
 
 ## Deployment
 
-### Vercel (Recommended)
+Any platform that runs a Node container works — the image is self-contained. Behind a TLS-terminating proxy, note that HSTS is already sent by the app itself.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Txemalon/3d-portfolio)
+## Notes
 
-### Docker / Self-Hosted
-
-The included `Dockerfile` produces a standalone Next.js image. Works with any container platform (Railway, Fly.io, Coolify, etc.):
-
-```bash
-docker build -t 3d-portfolio .
-docker run -p 3000:3000 3d-portfolio
-```
-
-## Performance
-
-- **Standalone output** — No `node_modules` in production; the Docker image is ~100 MB.
-- **Lazy loading** — Project screenshots use native lazy loading.
-- **Font optimisation** — Uses `next/font` for zero-layout-shift web fonts.
-- **Turbopack** — Sub-300ms dev server cold starts.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Author
-
-**Jose Maria Albero Belamendia (Txema)**
-
-- [LinkedIn](https://es.linkedin.com/in/jose-mar%C3%ADa-albero-belamendia-b9319a246)
-- [GitHub](https://github.com/Txemalon)
-- [X / Twitter](https://x.com/Txemalon)
+- The contribution heatmap reads from a third-party service (`github-contributions-api.jogruber.de`) directly in the browser; the profile and repo counts go through the server-side proxy instead. If that service is down, the section shows its error state with a retry button.
+- Unauthenticated GitHub REST is limited to 60 requests/hour per IP. The proxy caches for an hour and counts commits for at most 10 repos, so a cold container start spends 12 of those requests.

@@ -314,11 +314,34 @@ export default function GitHubActivity() {
   const num = (n: number) => n.toLocaleString(lang === "id" ? "id-ID" : "en-US");
   const contribWord = t("github.contributions");
 
+  // The heading is set as two lines for the big display type. Split the
+  // localised title on its first space so both languages break in the same
+  // place without hardcoding the words in JSX.
+  const [titleFirst, ...titleRest] = t("github.title").split(" ");
+  const titleLine1 = titleFirst;
+  const titleLine2 = titleRest.join(" ");
+
   const rows: { label: string; value: number; unit: string }[] = [
-    { label: "TOTAL", value: stats.total, unit: t("github.unitTotal") },
-    { label: "STREAK", value: stats.streak, unit: t("github.unitStreak") },
-    { label: "COMMIT", value: stats.commits, unit: t("github.unitCommit") },
-    { label: "REPO", value: stats.repos, unit: t("github.unitRepo") },
+    {
+      label: t("github.labelTotal"),
+      value: stats.total,
+      unit: t("github.unitTotal"),
+    },
+    {
+      label: t("github.labelStreak"),
+      value: stats.streak,
+      unit: t("github.unitStreak"),
+    },
+    {
+      label: t("github.labelCommit"),
+      value: stats.commits,
+      unit: t("github.unitCommit"),
+    },
+    {
+      label: t("github.labelRepo"),
+      value: stats.repos,
+      unit: t("github.unitRepo"),
+    },
   ];
 
   const tabs = [
@@ -353,9 +376,9 @@ export default function GitHubActivity() {
               className="mt-5 text-6xl sm:text-8xl lg:text-[96px] leading-[0.9] tracking-[-0.01em] text-ice-50"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              STILL
-              <br />
-              BUILDING
+              {titleLine1}
+              {titleLine2 ? <br /> : null}
+              {titleLine2}
             </h2>
           </Reveal>
 
@@ -465,7 +488,7 @@ export default function GitHubActivity() {
                 data-cursor="hover"
                 className="mt-6 font-mono text-[12px] uppercase tracking-[0.15em] text-background bg-ice-100 px-4 py-2 pointer-events-auto"
               >
-                {lang === "id" ? "Coba lagi" : "Retry"}
+                {t("github.retry")}
               </button>
             </div>
           )}

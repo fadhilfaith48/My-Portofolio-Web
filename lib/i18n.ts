@@ -80,7 +80,6 @@ export const DICT = {
     viewCode: { id: "Lihat kode", en: "View code" },
     close: { id: "Tutup", en: "Close" },
     stackLabel: { id: "Stack", en: "Stack" },
-    overview: { id: "Ringkasan", en: "Overview" },
   },
   contact: {
     kicker: { id: "kontak", en: "contact" },
@@ -101,34 +100,25 @@ export const DICT = {
   },
   github: {
     kicker: { id: "github activity", en: "github activity" },
-    title: { id: "Masih Membangun_", en: "Still Building_" },
-    subtitle: {
-      id: "Aktivitas dan repo publik dari akun GitHub saya.",
-      en: "My public activity and repositories from GitHub.",
-    },
-    total: { id: "Total Kontribusi", en: "Total Contributions" },
-    streak: { id: "Streak", en: "Streak" },
-    commits: { id: "Commit", en: "Commits" },
-    repos: { id: "Repo Publik", en: "Public Repos" },
-    lastYear: { id: "setahun terakhir", en: "last year" },
-    lastMonth: { id: "30 hari terakhir", en: "last 30 days" },
-    days: { id: "hari", en: "days" },
-    less: { id: "Sedikit", en: "Less" },
-    more: { id: "Banyak", en: "More" },
-    profile: { id: "Profil lengkap", en: "Full profile" },
-    loading: { id: "Memuat data GitHub…", en: "Loading GitHub data…" },
-    error: {
-      id: "Gagal memuat data GitHub. Cek kembali nanti.",
-      en: "Failed to load GitHub data. Try again later.",
-    },
-    contributions: { id: "kontribusi", en: "contributions" },
-    activeDays: { id: "hari aktif", en: "active days" },
-    reposLabel: { id: "Repo", en: "Repos" },
-    viewRepo: { id: "Buka repo", en: "Open repo" },
+    title: { id: "Masih Membangun", en: "Still Building" },
+    // Row labels in the stats table. Kept short and identical across
+    // languages — the localised part is the unit that follows each value.
+    labelTotal: { id: "Total", en: "Total" },
+    labelStreak: { id: "Streak", en: "Streak" },
+    labelCommit: { id: "Commit", en: "Commit" },
+    labelRepo: { id: "Repo", en: "Repo" },
     unitTotal: { id: "kontribusi", en: "contributions" },
     unitStreak: { id: "hari berturut-turut", en: "consecutive days" },
     unitCommit: { id: "commit", en: "commits" },
     unitRepo: { id: "repo publik", en: "public repos" },
+    less: { id: "Sedikit", en: "Less" },
+    more: { id: "Banyak", en: "More" },
+    error: {
+      id: "Gagal memuat data GitHub. Cek kembali nanti.",
+      en: "Failed to load GitHub data. Try again later.",
+    },
+    retry: { id: "Coba lagi", en: "Retry" },
+    contributions: { id: "kontribusi", en: "contributions" },
     fullProfile: { id: "profil lengkap", en: "full profile" },
     period12: { id: "12 BULAN", en: "12 MONTHS" },
     stars: { id: "Bintang", en: "Stars" },
@@ -151,10 +141,6 @@ export const DICT = {
       css: {
         id: "Yang membedakan bagus dan indah.",
         en: "What separates good from beautiful.",
-      },
-      tailwindcss: {
-        id: "Utility-first. Desain langsung di HTML.",
-        en: "Utility-first. Design inside the HTML.",
       },
       bootstrap: {
         id: "Komponen siap pakai, tampil rapi dalam hitungan menit.",
@@ -184,25 +170,9 @@ export const DICT = {
         id: "Menjalankan lebih banyak web dari yang kamu kira.",
         en: "Runs more of the web than you think.",
       },
-      odoo: {
-        id: "ERP yang tidak bikin nangis.",
-        en: "ERP that doesn't make you cry.",
-      },
-      postgresql: {
-        id: "Database membosankan yang selalu bekerja.",
-        en: "The boring database that always works.",
-      },
-      docker: {
-        id: "Sama di mesinku, sama di produksi.",
-        en: "Same on my machine, same in production.",
-      },
       git: {
         id: "Sejarah dan mesin waktu untuk kode.",
         en: "History and a time machine for your code.",
-      },
-      visualstudiocode: {
-        id: "Editor yang paling banyak dipakai developer di dunia.",
-        en: "The most used code editor by developers worldwide.",
       },
       github: {
         id: "Rumah untuk kode dan kolaborasi developer.",

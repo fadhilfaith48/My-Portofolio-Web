@@ -79,7 +79,7 @@ const SECTION_STATES: Record<string, KeyboardState> = {
     // pitch that the base wall takes over the silhouette.
     yaw: Math.PI * 0.40,
     pitch: Math.PI * 0.14,
-    roll: -Math.PI * -0.13,
+    roll: Math.PI * 0.13,
     posX: 0,
     posY: -0.6,
     posZ: 0,
