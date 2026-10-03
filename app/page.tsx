@@ -555,7 +555,12 @@ export default function Home() {
           ))}
 
           {/* GitHub Activity */}
-          <GitHubActivity />
+          <section
+            data-kb-section="github"
+            className="relative min-h-screen p-6 sm:p-10 md:p-14 pb-24"
+          >
+            <GitHubActivity />
+          </section>
 
           {/* Contact — copy pinned to the left so the (large, hero-posed)
               keyboard on the right has room to bob its random keys. */}

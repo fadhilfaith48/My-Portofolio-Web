@@ -353,7 +353,6 @@ export default function GitHubActivity() {
 
   return (
     <section
-      data-kb-section="github"
       data-kb-highlights="github,git"
       className="relative p-6 sm:p-10 md:p-14 pb-24"
     >
