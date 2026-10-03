@@ -93,9 +93,9 @@ const projects: Project[] = [
     },
     highlights: ["laravel", "php", "mysql", "Xampp","css","Git"],
     media: [
-      "/projects/bengkel/1-login.png",
-      "/projects/bengkel/2-dashboard.png",
-      "/projects/bengkel/3-laporan.png",
+      "/projects/bengkel/1-login.jpg",
+      "/projects/bengkel/2-dashboard.jpg",
+      "/projects/bengkel/3-laporan.jpg",
     ],
     align: "left",
     section: "project3",

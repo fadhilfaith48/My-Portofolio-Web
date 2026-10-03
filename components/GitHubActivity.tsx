@@ -346,7 +346,7 @@ export default function GitHubActivity() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="hover"
-              className="mt-14 inline-flex items-center gap-2 font-mono text-[14px] uppercase tracking-[0.18em] text-ice-100 border-b-2 border-ice-500 pb-1 w-max hover:text-ice-50 hover:border-ice-50 transition-colors"
+              className="mt-14 inline-flex items-center gap-2 font-mono text-[14px] uppercase tracking-[0.18em] text-ice-100 border-b-2 border-ice-500 pb-1 w-max pointer-events-auto hover:text-ice-50 hover:border-ice-50 transition-colors"
             >
               {t("github.fullProfile")}
               <svg
@@ -390,7 +390,7 @@ export default function GitHubActivity() {
 
           {/* Range tabs */}
           <Reveal delay={80}>
-            <div className="flex items-center justify-end gap-2 mt-8">
+            <div className="flex items-center justify-end gap-2 mt-8 pointer-events-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -422,9 +422,9 @@ export default function GitHubActivity() {
               <p className="text-sm text-ice-300">{t("github.error")}</p>
               <button
                 type="button"
-                onClick={() => changePeriod(period)}
+                onClick={() => reload(period)}
                 data-cursor="hover"
-                className="mt-6 font-mono text-[12px] uppercase tracking-[0.15em] text-background bg-ice-100 px-4 py-2"
+                className="mt-6 font-mono text-[12px] uppercase tracking-[0.15em] text-background bg-ice-100 px-4 py-2 pointer-events-auto"
               >
                 {lang === "id" ? "Coba lagi" : "Retry"}
               </button>
