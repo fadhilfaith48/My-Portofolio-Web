@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSeason } from "@/components/SeasonProvider";
 import { useLanguage } from "@/components/LanguageProvider";
 import Reveal from "@/components/Reveal";
@@ -63,9 +69,12 @@ function cellColor(accent: string, alpha: number): string {
   )}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`;
 }
 
-// GitHub renders one column per week starting on a Sunday.
+// GitHub renders one column per week starting on a Sunday. `months` holds a
+// label for the first column of each month so the caller can render the
+// month axis above the cells.
 function buildGrid(
-  contributions: Contribution[]
+  contributions: Contribution[],
+  lang: Lang
 ): { grid: (Contribution | null)[][]; months: string[] } {
   if (contributions.length === 0) return { grid: [], months: [] };
   const first = new Date(contributions[0].date);
@@ -91,7 +100,7 @@ function buildGrid(
     const d = new Date(colStart);
     d.setDate(colStart.getDate() + k * 7);
     if (d.getMonth() !== prevMonth) {
-      months[k] = monthAbbrev(d, "id").toUpperCase();
+      months[k] = monthAbbrev(d, lang).toUpperCase();
       prevMonth = d.getMonth();
     }
   }
@@ -168,6 +177,11 @@ export default function GitHubActivity() {
   const [period, setPeriod] = useState("last");
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
+  // Monotonic token identifying the newest contributions request. Switching
+  // range tabs fires overlapping fetches, and without this guard a slower
+  // earlier response can land after a faster later one and overwrite the
+  // chart with the wrong period.
+  const requestIdRef = useRef(0);
 
   const years = useMemo(() => {
     if (!user?.created_at) return [];
@@ -181,50 +195,64 @@ export default function GitHubActivity() {
     return list;
   }, [user]);
 
-  const loadContributions = useCallback(async (p: string) => {
-    setContributions([]);
-    try {
-      const res = await fetch(
-        `https://github-contributions-api.jogruber.de/v4/${USERNAME}?y=${p}`,
-        { headers: { Accept: "application/json" } }
-      );
-      if (!res.ok) throw new Error("github contributions");
-      const data = (await res.json()) as { contributions?: Contribution[] };
-      setContributions(data.contributions ?? []);
-      return true;
-    } catch {
-      return false;
-    }
-  }, []);
-
-  const reload = useCallback(async (p: string) => {
-    setStatus("loading");
-    try {
-      const res = await fetch("/api/github", {
-        headers: { Accept: "application/json" },
-      });
-      if (!res.ok) throw new Error("github proxy");
-
-      const data = (await res.json()) as {
-        user: GitHubUser | null;
-        repos: GitHubRepo[];
-        totalCommits: number;
-      };
-
-      const periodOk = await loadContributions(p);
-
-      if (!data.user && data.repos.length === 0 && !periodOk) {
-        throw new Error("github: no data");
+  // Returns "stale" when a newer request superseded this one, so callers can
+  // avoid writing state (or flipping status) for a period that is no longer
+  // selected.
+  const loadContributions = useCallback(
+    async (p: string): Promise<"ok" | "fail" | "stale"> => {
+      const id = ++requestIdRef.current;
+      setContributions([]);
+      try {
+        const res = await fetch(
+          `https://github-contributions-api.jogruber.de/v4/${USERNAME}?y=${p}`,
+          { headers: { Accept: "application/json" } }
+        );
+        if (!res.ok) throw new Error("github contributions");
+        const data = (await res.json()) as { contributions?: Contribution[] };
+        if (id !== requestIdRef.current) return "stale";
+        setContributions(data.contributions ?? []);
+        return "ok";
+      } catch {
+        return id === requestIdRef.current ? "fail" : "stale";
       }
+    },
+    []
+  );
 
-      setUser(data.user);
-      setRepos(data.repos ?? []);
-      setTotalCommits(data.totalCommits ?? 0);
-      setStatus("ok");
-    } catch {
-      setStatus("error");
-    }
-  }, [loadContributions]);
+  const reload = useCallback(
+    async (p: string) => {
+      setStatus("loading");
+      try {
+        const res = await fetch("/api/github", {
+          headers: { Accept: "application/json" },
+        });
+        if (!res.ok) throw new Error("github proxy");
+
+        const data = (await res.json()) as {
+          user: GitHubUser | null;
+          repos: GitHubRepo[];
+          totalCommits: number;
+        };
+
+        const periodResult = await loadContributions(p);
+        // A newer period request took over while we were fetching the
+        // profile — it owns the status now, so don't overwrite it.
+        if (periodResult === "stale") return;
+
+        if (!data.user && data.repos.length === 0 && periodResult === "fail") {
+          throw new Error("github: no data");
+        }
+
+        setUser(data.user);
+        setRepos(data.repos ?? []);
+        setTotalCommits(data.totalCommits ?? 0);
+        setStatus("ok");
+      } catch {
+        setStatus("error");
+      }
+    },
+    [loadContributions]
+  );
 
   useEffect(() => {
     void reload(period);
@@ -235,20 +263,31 @@ export default function GitHubActivity() {
     async (p: string) => {
       setPeriod(p);
       setStatus("loading");
-      const ok = await loadContributions(p);
-      setStatus(ok ? "ok" : "error");
+      const result = await loadContributions(p);
+      if (result === "stale") return;
+      setStatus(result === "ok" ? "ok" : "error");
     },
     [loadContributions]
   );
 
   const stats = useMemo(() => {
     let total = 0;
-    let streak = 0;
     for (let i = 0; i < contributions.length; i++) total += contributions[i].count;
-    for (let i = contributions.length - 1; i >= 0; i--) {
+
+    // Walk back over days with no contributions, then count the run that
+    // ends there. A calendar year ends on Dec 31 and a rolling window ends
+    // today, so both usually trail off with empty days — without skipping
+    // them first, the streak would always read 0 for past years. Only the
+    // trailing empties are skipped; a genuine gap inside the run still
+    // breaks it.
+    let i = contributions.length - 1;
+    while (i >= 0 && contributions[i].count === 0) i--;
+    let streak = 0;
+    for (; i >= 0; i--) {
       if (contributions[i].count > 0) streak++;
       else break;
     }
+
     const totalStars = repos.reduce((s, repo) => s + repo.stargazers_count, 0);
     return {
       total,
@@ -260,9 +299,9 @@ export default function GitHubActivity() {
     };
   }, [contributions, repos, totalCommits, user]);
 
-  const { grid } = useMemo(
-    () => buildGrid(contributions),
-    [contributions]
+  const { grid, months } = useMemo(
+    () => buildGrid(contributions, lang),
+    [contributions, lang]
   );
 
   const bars = useMemo(
@@ -472,6 +511,25 @@ export default function GitHubActivity() {
               {cols > 0 && (
                 <Reveal delay={200}>
                   <div className="mt-12 overflow-x-auto pb-2 w-full">
+                    {/* Month axis — same 12px/3px column rhythm as the cells
+                        below, so each label sits over the week its month
+                        starts in. */}
+                    <div
+                      className="grid w-max mb-1"
+                      style={{
+                        gridTemplateColumns: `repeat(${cols}, 12px)`,
+                        gap: "3px",
+                      }}
+                    >
+                      {months.map((m, c) => (
+                        <span
+                          key={c}
+                          className="font-mono text-[9px] uppercase text-ice-500 whitespace-nowrap"
+                        >
+                          {m}
+                        </span>
+                      ))}
+                    </div>
                     <div
                       className="grid w-max"
                       style={{

@@ -3,17 +3,22 @@
 import {
   createElement,
   useEffect,
-  useRef,
+  useState,
   type CSSProperties,
-  type ElementType,
+  type JSX,
   type ReactNode,
 } from "react";
 
 type Direction = "up" | "down" | "left" | "right" | "none";
 
+// Constrained to intrinsic (host) elements on purpose: the observer below
+// attaches a real DOM node, and letting callers pass an arbitrary component
+// would make the ref unattachable.
+type RevealTag = keyof JSX.IntrinsicElements;
+
 type RevealProps = {
   children: ReactNode;
-  as?: ElementType;
+  as?: RevealTag;
   delay?: number;
   duration?: number;
   distance?: number;
@@ -38,10 +43,13 @@ export default function Reveal({
   threshold = 0.15,
   once = true,
 }: RevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
+  // The node is held in state rather than a ref: a ref object passed
+  // through createElement reads as "a function may read this during
+  // render", which the react-hooks/refs rule rejects. A callback ref is
+  // also the documented way to receive a host node you need to observe.
+  const [el, setEl] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
       el.classList.add("reveal-in");
@@ -63,7 +71,7 @@ export default function Reveal({
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [threshold, once]);
+  }, [el, threshold, once]);
 
   const axis: Record<Direction, string> = {
     up: `translate3d(0, ${distance}px, 0)`,
@@ -83,7 +91,7 @@ export default function Reveal({
   return createElement(
     Tag,
     {
-      ref,
+      ref: setEl,
       className: `reveal ${className}`.trim(),
       style,
     },

@@ -305,8 +305,6 @@ function makeIconTexture(
   return tex;
 }
 
-const FRAME_TARGET: [number, number, number] = [-1.0, 0, 0];
-
 type SkillIcon = { title: string; slug: string; path: string; hex: string };
 
 const SKILLS: readonly (readonly SkillIcon[])[] = [
@@ -317,6 +315,23 @@ const SKILLS: readonly (readonly SkillIcon[])[] = [
 
 const COLS = 5;
 const ROWS = 3;
+
+type RandomBob = { freq: number; phase: number; threshold: number };
+
+// Per-key idle-bob parameters, sampled once at module scope rather than in
+// the render path (the compiler lint forbids impure calls during render).
+// Indexed by keycap position, so every key gets its own frequency, phase
+// and pop threshold while staying stable for the lifetime of the page —
+// neighbouring keys never fall into a synchronised wave.
+const RANDOM_BOBS: readonly RandomBob[] = Array.from(
+  { length: ROWS * COLS },
+  () => ({
+    freq: 0.6 + Math.random() * 0.6, // 0.6..1.2 Hz-ish
+    phase: Math.random() * Math.PI * 2,
+    threshold: 0.45 + Math.random() * 0.2, // 0.45..0.65 — higher = rarer pop
+  })
+);
+
 const KEYCAP_SIZE = 0.4;
 const KEYCAP_HEIGHT = 0.28;
 const KEYCAP_TOP_SCALE = 0.78;
@@ -435,6 +450,7 @@ function Keycap({
   activeSectionRef,
   wavePhase,
   accent,
+  randomBob,
 }: {
   geometry: THREE.BufferGeometry;
   position: [number, number, number];
@@ -454,6 +470,9 @@ function Keycap({
   // Season accent colour — highlighted keys glow in this colour, so the
   // bouncing keys feel "part of" the current theme.
   accent: string;
+  // Stable per-key idle-bob parameters, looked up by position from the
+  // module-level RANDOM_BOBS table.
+  randomBob: RandomBob;
 }) {
   const pressRef = useRef<THREE.Group>(null);
   const pressY = useRef(0);
@@ -461,18 +480,6 @@ function Keycap({
   const contactAmp = useRef(0); // smoothed 0..1 gate for the random idle bob
   const matRef = useRef<THREE.MeshPhysicalMaterial>(null);
   const baseEmissive = 0.3;
-
-  // Each key gets its own random frequency + phase, stable across re-renders
-  // so every keycap's random bob feels independent (no synchronised wave).
-  // Sampled once at mount.
-  const randomBob = useMemo(
-    () => ({
-      freq: 0.6 + Math.random() * 0.6, // 0.6..1.2 Hz-ish
-      phase: Math.random() * Math.PI * 2,
-      threshold: 0.45 + Math.random() * 0.2, // 0.45..0.65 — higher = rarer pop
-    }),
-    []
-  );
 
   const iconTexture = useMemo(
     () => makeIconTexture(icon.path, `#${icon.hex}`),
@@ -736,6 +743,7 @@ function Keyboard() {
       const z = (row - (ROWS - 1) / 2) * ROW_SPACING;
       const id = `${row}-${col}`;
       const icon = SKILLS[row][col];
+      const randomBob = RANDOM_BOBS[row * COLS + col];
       // Phase staggered by grid position so highlighted keys look like a
       // travelling wave rather than a synchronised pulse. Constants tuned
       // by eye — any non-degenerate combo works, just avoid exact multiples
@@ -753,6 +761,7 @@ function Keyboard() {
           activeSectionRef={activeSectionRef}
           wavePhase={wavePhase}
           accent={palette.accent}
+          randomBob={randomBob}
           onHoverChange={(h) =>
             setHoveredKey((prev) => (h ? id : prev === id ? null : prev))
           }
