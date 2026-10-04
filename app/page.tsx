@@ -506,25 +506,30 @@ export default function Home() {
                     {pick(p.desc, lang)}
                   </p>
                 </Reveal>
-                <Reveal delay={260}>
-                  <div
-                    className={
-                      p.align === "right"
-                        ? "flex flex-wrap gap-1.5 justify-end pointer-events-auto mb-5"
-                        : "flex flex-wrap gap-1.5 pointer-events-auto mb-5"
-                    }
-                  >
-                    {p.stack.map((s) => (
-                      <span
-                        key={s}
-                        data-cursor="hover"
-                        className="frost-chip"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </Reveal>
+                {/* Chips row collapses entirely when a project has no stack
+                    yet (placeholder projects), so the card doesn't keep an
+                    empty mb-5 gap between the copy and the actions. */}
+                {p.stack.length > 0 && (
+                  <Reveal delay={260}>
+                    <div
+                      className={
+                        p.align === "right"
+                          ? "flex flex-wrap gap-1.5 justify-end pointer-events-auto mb-5"
+                          : "flex flex-wrap gap-1.5 pointer-events-auto mb-5"
+                      }
+                    >
+                      {p.stack.map((s) => (
+                        <span
+                          key={s}
+                          data-cursor="hover"
+                          className="frost-chip"
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </Reveal>
+                )}
                 <Reveal delay={320}>
                   <div
                     className={

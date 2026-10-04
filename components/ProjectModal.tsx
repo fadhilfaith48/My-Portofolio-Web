@@ -195,18 +195,22 @@ export default function ProjectModal({ project, onClose }: Props) {
                 </div>
               )}
 
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.25em] text-ice-400 mb-2">
-                  {t("projects.stackLabel")}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.stack.map((s) => (
-                    <span key={s} className="frost-chip">
-                      {s}
-                    </span>
-                  ))}
+              {/* Same empty-stack guard as the cards: hide the whole block so
+                  placeholder projects don't show a dangling "Stack" heading. */}
+              {project.stack.length > 0 && (
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.25em] text-ice-400 mb-2">
+                    {t("projects.stackLabel")}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.stack.map((s) => (
+                      <span key={s} className="frost-chip">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </>
         )}
