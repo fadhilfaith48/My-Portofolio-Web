@@ -24,7 +24,13 @@ type Localised = { id: string; en: string };
 
 type Project = ProjectDetail & {
   align: "left" | "right";
-  section: "project1" | "project2" | "project3" | "project4";
+  section:
+    | "project1"
+    | "project2"
+    | "project3"
+    | "project4"
+    | "project5"
+    | "project6";
 };
 
 const projects: Project[] = [
