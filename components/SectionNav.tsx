@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 // Vertical dots fixed to the right edge that highlight the current section
@@ -12,32 +12,30 @@ export default function SectionNav() {
   const [active, setActive] = useState<string>("hero");
   const { t } = useLanguage();
 
-  const SECTIONS = [
-    { id: "hero", label: t("nav.home") },
-    { id: "stack", label: t("nav.stack") },
-    { id: "experience", label: t("nav.experience") },
-    { id: "project1", label: `${t("nav.project")} 01` },
-    { id: "project2", label: `${t("nav.project")} 02` },
-    { id: "project3", label: `${t("nav.project")} 03` },
-    { id: "project4", label: `${t("nav.project")} 04` },
-    { id: "github", label: t("nav.github") },
-    { id: "contact", label: t("nav.contact") },
-  ];
+  // Single source of truth for the nav. The observer below derives its
+  // element list from this array, so a new project only has to be added here
+  // (and to the page) to become navigable. Memoised on `t`, which is stable
+  // per language, so the IntersectionObserver isn't rebuilt on every render.
+  const SECTIONS = useMemo(
+    () => [
+      { id: "hero", label: t("nav.home") },
+      { id: "stack", label: t("nav.stack") },
+      { id: "experience", label: t("nav.experience") },
+      { id: "project1", label: `${t("nav.project")} 01` },
+      { id: "project2", label: `${t("nav.project")} 02` },
+      { id: "project3", label: `${t("nav.project")} 03` },
+      { id: "project4", label: `${t("nav.project")} 04` },
+      { id: "project5", label: `${t("nav.project")} 05` },
+      { id: "project6", label: `${t("nav.project")} 06` },
+      { id: "github", label: t("nav.github") },
+      { id: "contact", label: t("nav.contact") },
+    ],
+    [t]
+  );
 
   useEffect(() => {
-    const ids = [
-      "hero",
-      "stack",
-      "experience",
-      "project1",
-      "project2",
-      "project3",
-      "project4",
-      "github",
-      "contact",
-    ];
-    const els = ids.map((id) =>
-      document.querySelector<HTMLElement>(`[data-kb-section="${id}"]`)
+    const els = SECTIONS.map((s) =>
+      document.querySelector<HTMLElement>(`[data-kb-section="${s.id}"]`)
     );
     const obs = new IntersectionObserver(
       (entries) => {
@@ -54,7 +52,7 @@ export default function SectionNav() {
     );
     for (const el of els) if (el) obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [SECTIONS]);
 
   const goTo = (id: string) => {
     const target = document.querySelector<HTMLElement>(
