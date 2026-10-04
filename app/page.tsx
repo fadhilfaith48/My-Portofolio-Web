@@ -138,8 +138,58 @@ const projects: Project[] = [
       "/projects/madiun-siaga/2-laporan.png",
       "/projects/madiun-siaga/3-login_admin.png",
     ],
+    // TODO: paste the live URL here (https://...) — the modal's "Buka situs"
+    // button renders automatically once this is a non-empty string.
+    url: "",
     align: "right",
     section: "project4",
+  },
+  // Projects 05 and 06 are placeholders: the template, layout and carousel
+  // fallback are all wired up, so only the content below needs filling in.
+  // Fill name/desc/details/stack/media/highlights/url, and drop the
+  // screenshots into public/projects/<slug>/ using the same
+  // `1-<screen>.png` naming as the other projects.
+  {
+    num: "05",
+    name: {
+      id: "Judul Proyek 05",
+      en: "Project Title 05",
+    },
+    stack: [],
+    desc: {
+      id: "Deskripsi singkat proyek 05 — ganti dengan ringkasan asli.",
+      en: "Short description for project 05 — replace with the real summary.",
+    },
+    details: {
+      id: "Deskripsi lengkap proyek 05. Ganti dengan detail asli: fitur utama, latar belakang, dan hasil proyek.",
+      en: "Full description for project 05. Replace with the real details: key features, background, and outcomes.",
+    },
+    url: "",
+    highlights: [],
+    media: [],
+    align: "left",
+    section: "project5",
+  },
+  {
+    num: "06",
+    name: {
+      id: "Judul Proyek 06",
+      en: "Project Title 06",
+    },
+    stack: [],
+    desc: {
+      id: "Deskripsi singkat proyek 06 — ganti dengan ringkasan asli.",
+      en: "Short description for project 06 — replace with the real summary.",
+    },
+    details: {
+      id: "Deskripsi lengkap proyek 06. Ganti dengan detail asli: fitur utama, latar belakang, dan hasil proyek.",
+      en: "Full description for project 06. Replace with the real details: key features, background, and outcomes.",
+    },
+    url: "",
+    highlights: [],
+    media: [],
+    align: "right",
+    section: "project6",
   },
 ];
 
