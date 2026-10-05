@@ -138,9 +138,9 @@ const projects: Project[] = [
       "/projects/madiun-siaga/2-laporan.png",
       "/projects/madiun-siaga/3-login_admin.png",
     ],
-    // TODO: paste the live URL here (https://...) — the modal's "Buka situs"
-    // button renders automatically once this is a non-empty string.
-    url: "",
+    // Live URL of the deployed site. While this stays empty the modal shows
+    // no "Kunjungi website" button.
+    url: "https://madiun-sigap.vercel.app/",
     align: "right",
     section: "project4",
   },
