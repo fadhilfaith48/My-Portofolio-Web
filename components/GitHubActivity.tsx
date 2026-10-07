@@ -96,11 +96,22 @@ function buildGrid(
   const colStart = new Date(first);
   colStart.setDate(colStart.getDate() - startWeekday);
   let prevMonth = -1;
+  let lastPlaced = -10;
   for (let k = 0; k < cols; k++) {
     const d = new Date(colStart);
     d.setDate(colStart.getDate() + k * 7);
+    if (k === 0) {
+      months[0] = monthAbbrev(first, lang).toUpperCase();
+      lastPlaced = 0;
+      prevMonth = first.getMonth();
+      continue;
+    }
     if (d.getMonth() !== prevMonth) {
+      if (k - lastPlaced === 1) {
+        months[lastPlaced] = "";
+      }
       months[k] = monthAbbrev(d, lang).toUpperCase();
+      lastPlaced = k;
       prevMonth = d.getMonth();
     }
   }
@@ -496,7 +507,7 @@ export default function GitHubActivity() {
             <>
               {/* Monthly bar chart */}
               <Reveal delay={120}>
-                <div className="mt-14 overflow-x-auto pb-1 w-full">
+                <div className="mt-14 overflow-x-auto pb-1 w-full pointer-events-auto" data-lenis-prevent-horizontal>
                   <div
                     className="flex items-end justify-between gap-0 w-max min-w-full"
                     style={{ height: CHART_H }}
@@ -532,7 +543,7 @@ export default function GitHubActivity() {
               {/* Contribution heatmap — scrolls horizontally in its own container */}
               {cols > 0 && (
                 <Reveal delay={200}>
-                  <div className="mt-12 overflow-x-auto pb-2 w-full">
+                  <div className="mt-12 overflow-x-auto pb-2 w-full pointer-events-auto" data-lenis-prevent-horizontal>
                     {/* Month axis — same 12px/3px column rhythm as the cells
                         below, so each label sits over the week its month
                         starts in. */}
