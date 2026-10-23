@@ -11,6 +11,8 @@ An immersive developer portfolio built with **Next.js 16**, **React Three Fiber*
 - **Seasonal themes** — Four themes (Winter, Spring, Summer, Autumn) that re-skin every CSS token *and* the 3D scene lighting, keyboard body colour, and particles.
 - **Live GitHub activity** — Server-side proxy (`/api/github`) with an in-memory cache, plus a contribution heatmap and monthly bar chart.
 - **Project modals** — Fullscreen dialogs with image carousels, tech-stack chips, and optional source/live links.
+- **About & achievements** — A readable "Tentang saya" section, an "Organisasi & Sertifikat" section (student council, competitions, certificate uploads), and a text version of the tech stack so the skills are readable on touch devices and crawlable by search engines.
+- **Share cards & SEO** — Generated Open Graph image, `sitemap.xml`, `robots.txt`, canonical URLs, and Person structured data.
 - **Bilingual (ID/EN)** — A small custom i18n layer with no external dependency. Both preferences persist in `localStorage` and are applied before hydration to avoid a flash.
 - **Smooth scroll & reveal** — [Lenis](https://github.com/darkroomengineering/lenis) for inertial scrolling, `IntersectionObserver` reveal animations, and a scroll-progress bar.
 - **Security headers** — HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy` applied to every response.
@@ -104,15 +106,20 @@ docker run -p 3000:3000 portfolio
 
 ### Adding a project
 
-Projects live in the `projects` array in `app/page.tsx`:
+All content lives in `lib/content.ts` (server-safe, so it can also feed
+server components and metadata later). Projects are in the `projects` array:
 
 ```typescript
 {
   num: "05",
+  slug: "my-project",                        // used for /projects/[slug]
   name: { id: "Nama Proyek", en: "Project Name" },
   stack: ["Next.js", "TypeScript"],          // shown as chips
   desc: { id: "Deskripsi singkat", en: "Short copy" },
   details: { id: "Deskripsi panjang...", en: "Long copy" },
+  impact: [                                  // optional — measurable outcomes
+    { id: "127 unit test menutup logika harga.", en: "127 unit tests cover pricing logic." },
+  ],
   url: "https://myproject.com",             // optional — "Buka situs" button
   github: "https://github.com/user/repo",   // optional — "Lihat kode" button
   badge: { id: "Dikerjakan", en: "In progress" }, // optional status badge
@@ -124,6 +131,29 @@ Projects live in the `projects` array in `app/page.tsx`:
 ```
 
 `highlights` must be **simple-icons slugs** (lowercase, no spaces) and must match a keycap in `SKILLS` in `components/FrozenKeyboard.tsx` — an unknown slug simply never lights up. A new section id also needs a matching entry in `SECTION_STATES` and in the `SectionNav` list.
+
+### Page sections
+
+`app/page.tsx` renders the sections in order: hero, about, stack, experience,
+achievements, six project sections, github, contact. About, achievements, and
+the readable tech-stack grid live in `components/AboutSection.tsx`,
+`components/AchievementsSection.tsx`, and `components/TechGrid.tsx`; their copy
+is in `lib/content.ts` (`about`, `achievements`, `certificates`, `techGroups`).
+
+### Certificates
+
+Drop certificate files in `public/certs/` and register them in the
+`certificates` array in `lib/content.ts`. The section is hidden while the array
+is empty, so nothing broken is rendered. A portrait photo for the About card
+works the same way: put it at `public/about/portrait.jpg` and set
+`about.hasPortrait` to `true`.
+
+### Environment
+
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_SITE_URL` | Canonical origin used by `metadataBase`, `sitemap.xml`, and `robots.txt`. Defaults to a placeholder — set it to the real domain before deploying. |
+
 
 ### Changing themes
 
