@@ -11,6 +11,7 @@ import SeasonProvider, {
 import LanguageProvider, {
   LANG_BOOT_SCRIPT,
 } from "@/components/LanguageProvider";
+import { SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,16 +30,42 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "Fadhil Faith — Website Developer & Software Engineer",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Fadhil Faith — Website Developer & Software Engineer",
+    template: "%s — Fadhil Faith",
+  },
   description:
     "Portfolio of Fadhil Faith Al Abrisam Dewanto — Website Developer from Madiun, East Java. Building web apps with Laravel, Next.js, and more.",
+  applicationName: "Fadhil Faith — Portfolio",
   authors: [{ name: "Fadhil Faith Al Abrisam Dewanto" }],
+  creator: "Fadhil Faith Al Abrisam Dewanto",
+  keywords: [
+    "Fadhil Faith",
+    "portfolio",
+    "website developer",
+    "web developer Madiun",
+    "Laravel developer",
+    "Next.js developer",
+    "SMKN 1 Mejayan",
+    "RPL",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Fadhil Faith — Website Developer & Software Engineer",
     description:
       "Immersive 3D portfolio. Laravel, Next.js, Node.js, Python.",
     type: "website",
     locale: "id_ID",
+    alternateLocale: ["en_US"],
+    url: "/",
+    siteName: "Fadhil Faith",
   },
   twitter: {
     card: "summary_large_image",
