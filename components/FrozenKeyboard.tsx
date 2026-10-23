@@ -85,6 +85,28 @@ const SECTION_STATES: Record<string, KeyboardState> = {
     posZ: 0,
     scale: 1.3,
   },
+  // About — copy sits on the left, profile card on the right, so the
+  // keyboard drifts to the lower-left corner and stays out of the way.
+  about: {
+    yaw: Math.PI * 0.3,
+    pitch: Math.PI * 0.1,
+    roll: Math.PI * -0.04,
+    posX: -2.9,
+    posY: -2.1,
+    posZ: 0,
+    scale: 0.8,
+  },
+  // Organisasi & sertifikat — full-width card grid; keyboard drops low and
+  // centred so it peeks from behind the cards.
+  achievements: {
+    yaw: Math.PI * 0.35,
+    pitch: Math.PI * 0.1,
+    roll: Math.PI * -0.02,
+    posX: 0,
+    posY: -1.5,
+    posZ: 0,
+    scale: 1.15,
+  },
   // Project 1 — text is left-aligned, so the keyboard slides to the RIGHT,
   // near the giant "01" watermark.
   project1: {
@@ -709,6 +731,15 @@ function Keyboard() {
     const isShowcase =
       activeSectionRef.current === "hero" ||
       activeSectionRef.current === "contact";
+    // Narrow viewports have a much smaller horizontal field of view, so the
+    // same world-space keyboard covers the copy. Scale it down, pull it back
+    // towards the centre, and drop it below the copy on phones. The About
+    // section is text-heavy, so the keyboard steps aside entirely there.
+    const portrait = state.size.width < 768;
+    const hideOnPortrait = portrait && activeSectionRef.current === "about";
+    const sizeScale = hideOnPortrait ? 0.02 : portrait ? 0.42 : 1;
+    const positionScale = portrait ? 0.2 : 1;
+    const yOffset = portrait ? -1.4 : 0;
     const yawSwing = isShowcase ? 0.5 : 0.025;
     const pitchSwing = isShowcase ? 0.07 : 0.0;
     const rollSwing = isShowcase ? 0.05 : 0.0;
@@ -718,11 +749,13 @@ function Keyboard() {
       c.yaw + Math.sin(t * w) * yawSwing + spinRef.current;
     ref.current.rotation.x = c.pitch + Math.sin(t * w * 0.6) * pitchSwing;
     ref.current.rotation.z = c.roll + Math.sin(t * w * 0.8) * rollSwing;
-    ref.current.position.x = c.posX;
+    ref.current.position.x = c.posX * positionScale;
     ref.current.position.y =
-      c.posY + Math.sin(t * 0.6) * 0.04 + spinNorm * 0.35;
+      c.posY + yOffset + Math.sin(t * 0.6) * 0.04 + spinNorm * 0.35;
     ref.current.position.z = c.posZ;
-    ref.current.scale.setScalar(c.scale * (1 - spinNorm * 0.12));
+    ref.current.scale.setScalar(
+      c.scale * sizeScale * (1 - spinNorm * 0.12)
+    );
   });
 
   const keycapGeom = useMemo(

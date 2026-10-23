@@ -29,17 +29,52 @@ export const DICT = {
   nav: {
     aria: { id: "Bagian", en: "Sections" },
     home: { id: "Beranda", en: "Home" },
+    about: { id: "Tentang", en: "About" },
     stack: { id: "Stack", en: "Stack" },
     experience: { id: "Pengalaman", en: "Experience" },
+    achievements: { id: "Pencapaian", en: "Achievements" },
     project: { id: "Proyek", en: "Project" },
     github: { id: "GitHub", en: "GitHub" },
     contact: { id: "Kontak", en: "Contact" },
   },
   header: {
     availability: {
-      id: "Open to opportunities",
+      id: "Terbuka untuk peluang",
       en: "Open to opportunities",
     },
+  },
+  about: {
+    kicker: { id: "tentang", en: "about" },
+    title: { id: "Tentang saya", en: "About me" },
+    portraitAlt: { id: "Foto Fadhil Faith", en: "Photo of Fadhil Faith" },
+    name: { id: "Fadhil Faith", en: "Fadhil Faith" },
+    role: {
+      id: "Website Developer",
+      en: "Website Developer",
+    },
+    statProjects: { id: "Proyek", en: "Projects" },
+    statLive: { id: "Live", en: "Live" },
+    statSince: { id: "Mulai", en: "Since" },
+    available: { id: "Tersedia", en: "Available" },
+  },
+  achievements: {
+    kicker: { id: "pencapaian", en: "achievements" },
+    title: {
+      id: "Kompetisi & Sertifikat",
+      en: "Competitions & Certificates",
+    },
+    subtitle: {
+      id: "Partisipasi di kompetisi teknologi yang memperluas wawasan saya.",
+      en: "Technology competition participations that broadened my perspective.",
+    },
+    kind: {
+      organisasi: { id: "Organisasi", en: "Organization" },
+      kompetisi: { id: "Partisipasi", en: "Participation" },
+      sertifikat: { id: "Sertifikat", en: "Certificate" },
+    },
+    open: { id: "Lihat detail", en: "View details" },
+    certificate: { id: "Lihat sertifikat", en: "View certificate" },
+    certificatesTitle: { id: "Sertifikat", en: "Certificates" },
   },
   hero: {
     greeting: { id: "Halo, saya", en: "Hi, I am" },
@@ -94,8 +129,8 @@ export const DICT = {
     linkedin: { id: "LinkedIn", en: "LinkedIn" },
     emailToast: { id: "Email disalin", en: "Email copied" },
     footer: {
-      id: "© 2026 Fadhil Faith. Semua hak dilindungi.",
-      en: "© 2026 Fadhil Faith. All rights reserved.",
+      id: "Semua hak dilindungi.",
+      en: "All rights reserved.",
     },
   },
   github: {

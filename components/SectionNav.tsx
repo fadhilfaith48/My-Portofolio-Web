@@ -19,8 +19,10 @@ export default function SectionNav() {
   const SECTIONS = useMemo(
     () => [
       { id: "hero", label: t("nav.home") },
+      { id: "about", label: t("nav.about") },
       { id: "stack", label: t("nav.stack") },
       { id: "experience", label: t("nav.experience") },
+      { id: "achievements", label: t("nav.achievements") },
       { id: "project1", label: `${t("nav.project")} 01` },
       { id: "project2", label: `${t("nav.project")} 02` },
       { id: "project3", label: `${t("nav.project")} 03` },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FrozenKeyboard from "@/components/FrozenKeyboard";
 import SmoothScroll from "@/components/smooth-scroll";
 import Reveal from "@/components/Reveal";
@@ -9,261 +9,24 @@ import CopyEmail from "@/components/CopyEmail";
 import SeasonPicker from "@/components/SeasonPicker";
 import LanguagePicker from "@/components/LanguagePicker";
 import GitHubActivity from "@/components/GitHubActivity";
-import ProjectModal, {
-  type ProjectDetail,
-} from "@/components/ProjectModal";
+import AboutSection from "@/components/AboutSection";
+import AchievementsSection from "@/components/AchievementsSection";
+import TechGrid from "@/components/TechGrid";
+import ProjectModal from "@/components/ProjectModal";
 import { useLanguage } from "@/components/LanguageProvider";
-import type { Lang } from "@/lib/i18n";
-
-const EMAIL = "fadhilfaith2@gmail.com";
-
-// Localised content lives in `{ id, en }` objects inside these arrays so the
-// page can be a straightforward array.map() at render time. Tech names stay
-// as plain strings (they're brand names, not localised).
-type Localised = { id: string; en: string };
-
-type Project = ProjectDetail & {
-  align: "left" | "right";
-  section:
-    | "project1"
-    | "project2"
-    | "project3"
-    | "project4"
-    | "project5"
-    | "project6";
-};
-
-const projects: Project[] = [
-  {
-    num: "01",
-    name: {
-      id: "Aplikasi Kasir Coffee Shop",
-      en: "Coffee Shop POS App",
-    },
-    stack: ["Java", "Apache NetBeans", "MySQL", "CSS"],
-    desc: {
-      id: "Aplikasi desktop untuk manajemen kasir dan inventaris coffee shop, dibangun dengan Java.",
-      en: "Desktop application for cashier management and inventory tracking of a coffee shop, built with Java.",
-    },
-    details: {
-      id: "Aplikasi desktop yang dikembangkan dengan Java dan Apache NetBeans. Dilengkapi sistem kasir, manajemen inventaris produk, riwayat transaksi, dan laporan penjualan. Proyek ini dirancang untuk menyederhanakan operasional harian sebuah coffee shop.",
-      en: "Desktop application developed with Java and Apache NetBeans. Features a cashier system, product inventory management, transaction history, and sales reports. Designed to simplify daily operations of a coffee shop.",
-    },
-    // simple-icons slugs light up the matching 3D keycaps. Java has no icon
-    // in that set, so the closest present stack entries are used.
-    highlights: ["mysql", "css"],
-    media: [
-      "/projects/coffee-shop/1-login.png",
-      "/projects/coffee-shop/2-admin.png",
-      "/projects/coffee-shop/3-kasir.png",
-    ],
-    align: "left",
-    section: "project1",
-  },
-  {
-    num: "02",
-    name: {
-      id: "Website E-Commerce / Profil UMKM",
-      en: "E-Commerce / SME Profile Website",
-    },
-    stack: ["Laravel", "PHP", "MySQL", "Xampp", "CSS", "Git"],
-    desc: {
-      id: "Website e-commerce dan profil untuk UMKM dengan panel admin, autentikasi, dan manajemen data.",
-      en: "E-commerce and profile website for a small business with admin dashboard, authentication, and data management.",
-    },
-    details: {
-      id: "Website lengkap untuk usaha kecil dan menengah yang dibangun dengan Laravel. Mencakup katalog produk, keranjang belanja, panel admin untuk manajemen inventaris dan pesanan, sistem autentikasi pengguna, serta manajemen data bisnis.",
-      en: "Full-featured website for small and medium businesses built with Laravel. Includes product catalogue, shopping cart, admin panel for inventory and order management, user authentication system, and business data management.",
-    },
-    highlights: ["laravel", "php", "mysql", "css", "git"],
-    media: [
-      "/projects/umkm/1-daftar.png",
-      "/projects/umkm/2-masuk.png",
-      "/projects/umkm/3-dashboard.png",
-    ],
-    align: "right",
-    section: "project2",
-  },
-  {
-    num: "03",
-    name: {
-      id: "Aplikasi Manajemen Bengkel",
-      en: "Workshop Management App",
-    },
-    stack: ["Laravel", "PHP", "MySQL", "Xampp", "CSS", "Git"],
-    desc: {
-      id: "Sistem untuk bengkel: pencatatan sparepart keluar-masuk, kalkulasi biaya jasa montir, dan riwayat servis kendaraan.",
-      en: "System for auto workshops: spare parts tracking, mechanic labor cost calculation, and vehicle service history.",
-    },
-    details: {
-      id: "Aplikasi web berbasis Laravel untuk manajemen bengkel secara menyeluruh. Memungkinkan pencatatan keluar-masuk sparepart, kalkulasi otomatis biaya jasa montir, dan riwayat servis lengkap per kendaraan. Memudahkan kontrol operasional dan keuangan bengkel.",
-      en: "Web application built with Laravel for comprehensive auto workshop management. Tracks spare parts in and out, automatically calculates mechanic labor costs, and maintains a complete service history per vehicle. Streamlines operational and financial control of the workshop.",
-    },
-    highlights: ["laravel", "php", "mysql", "css", "git"],
-    media: [
-      "/projects/bengkel/1-login.jpg",
-      "/projects/bengkel/2-dashboard.jpg",
-      "/projects/bengkel/3-laporan.jpg",
-    ],
-    align: "left",
-    section: "project3",
-  },
-  {
-    num: "04",
-    name: {
-      id: "Madiun Sigap — Platform Layanan Publik",
-      en: "Madiun Sigap — Public Services Platform",
-    },
-    stack: ["Next.js", "JavaScript", "TypeScript", "CSS", "Git"],
-    desc: {
-      id: "Website layanan publik Kabupaten Madiun dengan fitur pengaduan masyarakat, pengelolaan data, dan sistem pelayanan publik.",
-      en: "Public services website for Madiun regency with citizen complaint system and data management.",
-    },
-    details: {
-      id: "Platform web berbasis Next.js untuk Kabupaten Madiun. Memungkinkan warga mengirim pengaduan dan permintaan layanan publik, dengan panel manajemen untuk petugas. Dilengkapi sistem pelacakan kasus, notifikasi, dan laporan pelayanan warga.",
-      en: "Web platform built with Next.js for Madiun Regency. Allows citizens to submit complaints and public service requests, with a management panel for officials. Includes case tracking, notifications, and citizen service reports.",
-    },
-    highlights: [
-      "nextdotjs",
-      "nodedotjs",
-      "react",
-      "javascript",
-      "typescript",
-      "css",
-      "git",
-      "github",
-    ],
-    media: [
-      "/projects/madiun-siaga/1-dashboard.png",
-      "/projects/madiun-siaga/2-laporan.png",
-      "/projects/madiun-siaga/3-login_admin.png",
-    ],
-    // Live URL of the deployed site. While this stays empty the modal shows
-    // no "Kunjungi website" button.
-    url: "https://madiun-sigap.vercel.app/",
-    align: "right",
-    section: "project4",
-  },
-  // Projects 05 and 06 are placeholders: the template, layout and carousel
-  // fallback are all wired up, so only the content below needs filling in.
-  // Fill name/desc/details/stack/media/highlights/url, and drop the
-  // screenshots into public/projects/<slug>/ using the same
-  // `1-<screen>.png` naming as the other projects.
-  {
-    num: "05",
-    name: {
-      id: "Market_News — Dashboard Crypto Real-Time",
-      en: "Market_News — Real-Time Crypto Market Dashboard",
-    },
-    stack: [
-      "Next.js 16",
-      "TypeScript",
-      "React 19",
-      "Tailwind CSS v4",
-      "Zustand",
-      "TanStack Query",
-      "Lightweight Charts",
-      "Binance WebSocket",
-      "CoinGecko",
-      "Vitest",
-      "Git",
-    ],
-    desc: {
-      id: "Dashboard monitoring pasar crypto real-time bergaya TradingView. Menampilkan harga live 50 koin via WebSocket Binance dengan fallback REST, grafik candlestick, watchlist, portofolio, dan price alert.",
-      en: "TradingView-style real-time crypto market dashboard. Displays live prices for 50 coins via Binance WebSocket with REST fallback, candlestick charts, watchlist, portfolio, and price alerts.",
-    },
-    details: {
-      id: "Market_News adalah dashboard monitoring pasar crypto real-time bergaya TradingView. Terhubung langsung ke Binance WebSocket (data-stream.binance.vision) untuk pembaruan harga instan dengan mekanisme fallback polling REST bila koneksi WebSocket terputus. Menampilkan grafik candlestick real-time (Lightweight Charts v5), daftar 50 koin terpopuler, watchlist, portofolio, dan price alert sepenuhnya di sisi klien. Menggunakan CoinGecko untuk data market cap/supply serta kurs fiat melalui open.er-api.com. Dibangun dengan Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS v4, Zustand v5 (persist ke localStorage), TanStack React Query v5, dan diuji dengan Vitest v4 (127 unit test). Ter-deploy di Vercel dengan API routes serverless dan SSG untuk ~50 halaman koin. Antarmuka menggunakan bahasa Indonesia dengan dukungan dark/light theme.",
-      en: "Market_News is a TradingView-style real-time crypto market dashboard. It connects directly to Binance WebSocket (data-stream.binance.vision) for instant price updates with automatic REST polling fallback if the WebSocket goes offline. Features real-time candlestick charts (Lightweight Charts v5), a list of 50 top coins, watchlist, portfolio, and client-side price alerts. Integrates CoinGecko for market cap/supply data and fiat rates via open.er-api.com. Built with Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS v4, Zustand v5 (persisted to localStorage), TanStack React Query v5, and tested with Vitest v4 (127 unit tests). Deployed on Vercel with serverless API routes and SSG for ~50 coin pages. Indonesian UI with dark/light theme support.",
-    },
-    url: "https://market-news-roan.vercel.app/",
-    highlights: ["nextdotjs", "typescript", "react", "css", "git"],
-    media: [
-      "/projects/market-news/1-beranda.png",
-      "/projects/market-news/2-candlestick.png",
-      "/projects/market-news/3-watchlist-portfolio.png",
-    ],
-    align: "left",
-    section: "project5",
-  },
-  {
-    num: "06",
-    name: {
-      id: "News App — Aplikasi Berita",
-      en: "News App",
-    },
-    stack: [
-      "Next.js",
-      "TypeScript",
-      "React",
-      "Tailwind CSS",
-      "Zustand",
-      "TanStack Query",
-      "Git",
-    ],
-    desc: {
-      id: "Aplikasi berita yang menampilkan berita terkini dengan kategori, pencarian, dan tampilan detail artikel.",
-      en: "News application that displays the latest news with categories, search, and article detail views.",
-    },
-    details: {
-      id: "News App adalah aplikasi web yang menampilkan berita terkini dari berbagai kategori. Dilengkapi fitur pencarian berita, filter berdasarkan kategori, tampilan daftar berita, dan halaman detail artikel yang bersih. Dibangun dengan Next.js, TypeScript, Tailwind CSS, Zustand untuk state management, dan TanStack Query untuk fetching data. Desain responsif untuk pengalaman membaca yang nyaman di berbagai perangkat.",
-      en: "News App is a web application that displays the latest news across multiple categories. Features include news search, category filtering, news list view, and a clean article detail page. Built with Next.js, TypeScript, Tailwind CSS, Zustand for state management, and TanStack Query for data fetching. Responsive design ensures a comfortable reading experience across devices.",
-    },
-    url: "",
-    highlights: ["nextdotjs", "typescript", "react", "css", "git"],
-    media: [
-      "/projects/project6/1-beranda.png",
-      "/projects/project6/2-detail.png",
-      "/projects/project6/3-kategori.png",
-    ],
-    align: "right",
-    section: "project6",
-  },
-];
-
-const experiences: Array<{
-  role: Localised;
-  company: string;
-  period: Localised;
-  location: Localised;
-  summary: Localised;
-  bullets: Localised[];
-  stack: string[];
-}> = [
-  {
-    role: { id: "Website Developer", en: "Website Developer" },
-    company: "Freelance / Proyek Sekolah",
-    period: { id: "2024 — Sekarang", en: "2024 — Present" },
-    location: { id: "Madiun, Jawa Timur", en: "Madiun, East Java" },
-    summary: {
-      id: "Siswa Rekayasa Perangkat Lunak (RPL) di SMKN 1 Mejayan dengan pengalaman praktis dalam pengembangan web menggunakan Laravel, Next.js, dan Node.js. Terbiasa bekerja mandiri maupun dalam tim menggunakan Git untuk membangun aplikasi web yang fungsional dan responsif.",
-      en: "Software Engineering (RPL) student at SMKN 1 Mejayan with hands-on experience in web development using Laravel, Next.js, and Node.js. Work independently and in teams using Git to build functional and responsive web applications.",
-    },
-    bullets: [
-      {
-        id: "Membuat aplikasi kasir dan manajemen inventaris coffee shop berbasis Java desktop menggunakan Apache NetBeans.",
-        en: "Built a Java desktop app for cashier and inventory management of a coffee shop.",
-      },
-      {
-        id: "Membangun website e-commerce dan profil UMKM dengan Laravel, dilengkapi panel admin dan autentikasi login.",
-        en: "Built e-commerce and profile websites for small businesses with Laravel, including admin panel and authentication.",
-      },
-      {
-        id: "Mengembangkan 'Madiun Sigap', platform layanan publik dengan Node.js untuk pengelolaan pengaduan masyarakat.",
-        en: "Developed 'Madiun Sigap', a public services platform with Node.js for citizen complaint management.",
-      },
-      {
-        id: "Berpartisipasi dalam kompetisi teknologi: Inotek Kabupaten Madiun dan Festika Jatim (AREK_AI 2025).",
-        en: "Participated in tech competitions: Inotek Kabupaten Madiun and Festika Jatim (AREK_AI 2025).",
-      },
-    ],
-    stack: ["HTML", "CSS", "JavaScript", "Python", "Java", "PHP", "Laravel", "Node.js", "MySQL", "Git"],
-  },
-];
-
-function pick<T>(loc: { id: T; en: T }, lang: Lang): T {
-  return loc[lang];
-}
+import {
+  CV_FILES,
+  EMAIL,
+  FULL_NAME,
+  GITHUB_URL,
+  LINKEDIN_URL,
+  SITE_NAME,
+  experiences,
+  projects,
+  type Lang,
+  type Localised,
+  type Project,
+} from "@/lib/content";
 
 // Hero name split per word so each can rise independently. Whitespace
 // preserved as its own span so the line wraps naturally if needed.
@@ -283,12 +46,70 @@ function HeroWord({
   );
 }
 
+function pick<T>(loc: Localised & { id: T; en: T }, lang: Lang): T;
+function pick<T>(loc: { id: T; en: T }, lang: Lang): T {
+  return loc[lang];
+}
+
+// Structured data so search engines can connect the name, role, school, and
+// social profiles. Kept in the page rather than layout because it describes
+// this specific page's content.
+const PERSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: FULL_NAME,
+  alternateName: SITE_NAME,
+  jobTitle: "Website Developer & Software Engineer",
+  email: `mailto:${EMAIL}`,
+  url: "/",
+  alumniOf: {
+    "@type": "EducationalOrganization",
+    name: "SMKN 1 Mejayan",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Madiun",
+    addressRegion: "East Java",
+    addressCountry: "ID",
+  },
+  knowsAbout: [
+    "Laravel",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "PHP",
+    "MySQL",
+    "Node.js",
+    "Web Development",
+  ],
+  sameAs: [GITHUB_URL, LINKEDIN_URL],
+};
+
 export default function Home() {
   const { t, lang } = useLanguage();
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const year = new Date().getFullYear();
+
+  // Deep links like /#achievements. Lenis owns the scroll position, so the
+  // native fragment jump on load can land in the wrong place (or nowhere)
+  // once the page settles — redo it after hydration.
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (!hash) return;
+    const jump = () => {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: "instant", block: "start" });
+    };
+    const id = window.setTimeout(jump, 350);
+    return () => window.clearTimeout(id);
+  }, []);
 
   return (
     <SmoothScroll>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_LD) }}
+      />
       <div className="relative">
         {/* Persistent 3D scene — fullscreen behind content; events must reach it. */}
         <div className="fixed inset-0 z-0">
@@ -304,14 +125,17 @@ export default function Home() {
             >
               Fadhil Faith
             </span>
-            <span className="status-pill hidden sm:inline-flex">
-              {t("header.availability")}
+            {/* The pill is wrapped instead of carrying `hidden` directly:
+                `.status-pill` in globals.css is unlayered CSS, which always
+                wins over Tailwind's layered `hidden` utility. */}
+            <span className="hidden sm:inline-flex">
+              <span className="status-pill">{t("header.availability")}</span>
             </span>
           </div>
           <div className="flex items-center gap-2 pointer-events-auto">
             <SeasonPicker />
             <a
-              href="https://github.com/fadhilfaith48"
+              href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="hover"
@@ -331,8 +155,9 @@ export default function Home() {
         <main className="relative z-10 pointer-events-none">
           {/* Hero */}
           <section
+            id="hero"
             data-kb-section="hero"
-            className="min-h-screen flex flex-col justify-center p-6 sm:p-10 md:p-14"
+            className="scroll-mt-24 min-h-screen flex flex-col justify-center p-6 sm:p-10 md:p-14"
           >
             <div className="mt-20">
               <p
@@ -361,7 +186,7 @@ export default function Home() {
                 style={{ ["--d" as string]: "700ms" }}
               >
                 <a
-                  href="/cv_fadhil.pdf"
+                  href={CV_FILES[lang]}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="hover"
@@ -381,16 +206,14 @@ export default function Home() {
                   className="frost-btn"
                   onClick={() =>
                     document
-                      .querySelector<HTMLElement>(
-                        '[data-kb-section="contact"]'
-                      )
+                      .querySelector<HTMLElement>('[data-kb-section="contact"]')
                       ?.scrollIntoView({ behavior: "smooth", block: "start" })
                   }
                 >
                   {t("hero.hire")}
                 </button>
                 <a
-                  href="https://github.com/fadhilfaith48"
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="hover"
@@ -403,7 +226,7 @@ export default function Home() {
                   </svg>
                 </a>
                 <a
-                  href="https://www.linkedin.com/in/fadhil-faith"
+                  href={LINKEDIN_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="hover"
@@ -433,10 +256,16 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Stack */}
+          {/* About */}
+          <AboutSection />
+
+          {/* Stack — the sticky stage keeps the 3D keyboard hover game, and
+              the text grid underneath makes the same stack readable on touch
+              devices and crawlable by search engines. */}
           <section
+            id="stack"
             data-kb-section="stack"
-            className="relative min-h-[200vh] p-6 sm:p-10 md:p-14"
+            className="scroll-mt-24 relative p-6 sm:p-10 md:p-14"
           >
             <div className="relative h-[150vh]">
               <div className="sticky top-24 sm:top-28 text-center">
@@ -452,6 +281,9 @@ export default function Home() {
                 </Reveal>
               </div>
             </div>
+            <div className="relative z-10 max-w-6xl mx-auto pb-16">
+              <TechGrid />
+            </div>
           </section>
 
           {/* Experience — title is sticky at top-24 (feels anchored) but sits
@@ -461,8 +293,9 @@ export default function Home() {
               section ends and the title un-pins and exits the viewport at the
               same time — giving the "anchored then both disappear" feel. */}
           <section
+            id="experience"
             data-kb-section="experience"
-            className="relative p-6 sm:p-10 md:p-14 pb-24"
+            className="scroll-mt-24 relative p-6 sm:p-10 md:p-14 pb-24"
           >
             <div className="sticky top-24 sm:top-28 text-center mb-12 sm:mb-16 z-0">
               <Reveal>
@@ -535,13 +368,17 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Organisasi & sertifikat */}
+          <AchievementsSection />
+
           {/* Projects */}
           {projects.map((p) => (
             <section
               key={p.num}
+              id={p.section}
               data-kb-section={p.section}
               data-kb-highlights={(p.highlights ?? []).join(",")}
-              className="relative min-h-screen flex items-center p-6 sm:p-10 md:p-14 overflow-hidden"
+              className="scroll-mt-24 relative min-h-screen flex items-center p-6 sm:p-10 md:p-14 overflow-hidden"
             >
               <span
                 aria-hidden
@@ -645,8 +482,9 @@ export default function Home() {
 
           {/* GitHub Activity */}
           <section
+            id="github"
             data-kb-section="github"
-            className="relative min-h-screen p-6 sm:p-10 md:p-14 pb-24"
+            className="scroll-mt-24 relative min-h-screen p-6 sm:p-10 md:p-14 pb-24"
           >
             <GitHubActivity />
           </section>
@@ -654,8 +492,9 @@ export default function Home() {
           {/* Contact — copy pinned to the left so the (large, hero-posed)
               keyboard on the right has room to bob its random keys. */}
           <section
+            id="contact"
             data-kb-section="contact"
-            className="relative min-h-screen flex flex-col justify-center p-6 sm:p-10 md:p-14 overflow-hidden"
+            className="scroll-mt-24 relative min-h-screen flex flex-col justify-center p-6 sm:p-10 md:p-14 overflow-hidden"
           >
             <div className="max-w-xl relative">
               <Reveal>
@@ -693,7 +532,7 @@ export default function Home() {
                     {t("contact.openMail")}
                   </a>
                   <a
-                    href="https://github.com/fadhilfaith48"
+                    href={GITHUB_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     data-cursor="hover"
@@ -702,7 +541,7 @@ export default function Home() {
                     {t("contact.github")}
                   </a>
                   <a
-                    href="https://www.linkedin.com/in/fadhil-faith"
+                    href={LINKEDIN_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     data-cursor="hover"
@@ -715,7 +554,7 @@ export default function Home() {
             </div>
             <Reveal delay={320}>
               <p className="mt-14 text-[11px] uppercase tracking-[0.25em] text-ice-400">
-                {t("contact.footer")}
+                © {year} {SITE_NAME}. {t("contact.footer")}
               </p>
             </Reveal>
           </section>
