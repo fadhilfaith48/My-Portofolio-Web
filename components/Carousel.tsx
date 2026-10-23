@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 type Props = {
   media?: string[];
@@ -49,12 +50,15 @@ export default function Carousel({ media, projectNum, altPrefix = "Screenshot" }
         {slides.map((src, i) => (
           <div key={i} className="carousel__slide">
             {src ? (
-              // Real screenshot
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              // Real screenshot. `fill` + the slide's relative positioning
+              // lets Next.js resize/serve WebP on demand instead of shipping
+              // the full-size PNG.
+              <Image
                 src={src}
                 alt={`${altPrefix} ${i + 1}`}
                 className="carousel__img"
+                fill
+                sizes="(max-width: 768px) 92vw, 1024px"
                 loading="lazy"
               />
             ) : (
