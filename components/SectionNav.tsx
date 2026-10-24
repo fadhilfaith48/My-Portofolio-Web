@@ -38,21 +38,27 @@ export default function SectionNav() {
   useEffect(() => {
     const els = SECTIONS.map((s) =>
       document.querySelector<HTMLElement>(`[data-kb-section="${s.id}"]`)
-    );
+    ).filter((el): el is HTMLElement => el !== null);
+    // Keep every element's latest ratio instead of trusting only the entries
+    // that changed in this callback — tall sections never reach the highest
+    // threshold, so the observer used to leave the previous dot highlighted.
+    const visibility = new Map<Element, number>();
     const obs = new IntersectionObserver(
       (entries) => {
-        let best: { id: string; ratio: number } | null = null;
         for (const entry of entries) {
-          const id = (entry.target as HTMLElement).dataset.kbSection;
+          visibility.set(entry.target, entry.intersectionRatio);
+        }
+        let best: { id: string; ratio: number } | null = null;
+        for (const [el, ratio] of visibility) {
+          const id = (el as HTMLElement).dataset.kbSection;
           if (!id) continue;
-          const ratio = entry.intersectionRatio;
           if (!best || ratio > best.ratio) best = { id, ratio };
         }
         if (best && best.ratio > 0) setActive(best.id);
       },
-      { threshold: [0.25, 0.5, 0.75] }
+      { threshold: [0, 0.25, 0.5, 0.75, 1] }
     );
-    for (const el of els) if (el) obs.observe(el);
+    for (const el of els) obs.observe(el);
     return () => obs.disconnect();
   }, [SECTIONS]);
 
@@ -81,7 +87,7 @@ export default function SectionNav() {
             aria-current={isActive ? "true" : undefined}
           >
             <span
-              className={`text-[10px] uppercase tracking-[0.25em] text-ice-200 transition-all duration-300 ${
+              className={`whitespace-nowrap text-[10px] uppercase tracking-[0.25em] text-ice-200 transition-all duration-300 ${
                 isActive
                   ? "opacity-100 -translate-x-1"
                   : "opacity-0 translate-x-2 group-hover:opacity-80 group-hover:translate-x-0"
