@@ -85,6 +85,19 @@ const SECTION_STATES: Record<string, KeyboardState> = {
     posZ: 0,
     scale: 1.3,
   },
+  // Stack grid — the readable text list. The keyboard shrinks and tucks to
+  // the right edge (instead of holding the big centred "stack" pose all the
+  // way through the cards), so it reads as a quiet backdrop here and can
+  // glide straight into the centred experience pose without a downward park.
+  stackGrid: {
+    yaw: Math.PI * 0.36,
+    pitch: Math.PI * 0.11,
+    roll: Math.PI * 0.06,
+    posX: 2.6,
+    posY: -0.2,
+    posZ: 0,
+    scale: 0.75,
+  },
   // About — copy sits on the left, profile card on the right, so the
   // keyboard drifts to the lower-left corner and stays out of the way.
   about: {

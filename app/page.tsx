@@ -259,15 +259,13 @@ export default function Home() {
           {/* About */}
           <AboutSection />
 
-          {/* Stack — the sticky stage keeps the 3D keyboard hover game, and
-              the text grid underneath makes the same stack readable on touch
-              devices and crawlable by search engines. */}
+          {/* Stack — the sticky stage keeps the 3D keyboard hover game. */}
           <section
             id="stack"
             data-kb-section="stack"
             className="scroll-mt-24 relative p-6 sm:p-10 md:p-14"
           >
-            <div className="relative h-[150vh]">
+            <div className="relative h-[120vh]">
               <div className="sticky top-24 sm:top-28 text-center">
                 <Reveal>
                   <h2 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-[-0.03em] text-ice-50 leading-[0.95]">
@@ -281,6 +279,16 @@ export default function Home() {
                 </Reveal>
               </div>
             </div>
+          </section>
+
+          {/* Stack grid — own section so the keyboard has its own pose here
+              instead of staying in the big centred "stack" pose through the
+              cards (which made it drift down over the next heading). */}
+          <section
+            id="stack-grid"
+            data-kb-section="stackGrid"
+            className="scroll-mt-24 relative p-6 sm:p-10 md:p-14 pb-24"
+          >
             <div className="relative z-10 max-w-6xl mx-auto pb-16">
               <TechGrid />
             </div>
