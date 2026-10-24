@@ -514,13 +514,18 @@ export const techGroups: Array<{ title: Localised; items: TechItem[] }> = [
       { name: "Laravel", icon: "laravel" },
       { name: "PHP", icon: "php" },
       { name: "Node.js", icon: "nodedotjs" },
+      { name: "Go", icon: "go" },
       { name: "Java", icon: "openjdk" },
       { name: "Python", icon: "python" },
     ],
   },
   {
     title: { id: "Database", en: "Database" },
-    items: [{ name: "MySQL", icon: "mysql" }],
+    items: [
+      { name: "MySQL", icon: "mysql" },
+      { name: "PostgreSQL", icon: "postgresql" },
+      { name: "Redis", icon: "redis" },
+    ],
   },
   {
     title: { id: "Tools", en: "Tools" },
@@ -528,6 +533,7 @@ export const techGroups: Array<{ title: Localised; items: TechItem[] }> = [
       { name: "Git", icon: "git" },
       { name: "GitHub", icon: "github" },
       { name: "XAMPP", icon: "xampp" },
+      { name: "Laragon", icon: "laragon" },
       { name: "Vercel", icon: "vercel" },
     ],
   },
