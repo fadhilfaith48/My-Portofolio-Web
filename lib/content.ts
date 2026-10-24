@@ -532,6 +532,7 @@ export const techGroups: Array<{ title: Localised; items: TechItem[] }> = [
     items: [
       { name: "Git", icon: "git" },
       { name: "GitHub", icon: "github" },
+      { name: "VS Code", icon: "vscode" },
       { name: "XAMPP", icon: "xampp" },
       { name: "Laragon", icon: "laragon" },
       { name: "Vercel", icon: "vercel" },
