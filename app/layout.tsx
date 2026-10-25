@@ -12,6 +12,48 @@ import LanguageProvider, {
   LANG_BOOT_SCRIPT,
 } from "@/components/LanguageProvider";
 import { SITE_URL } from "@/lib/site";
+import {
+  EMAIL,
+  FULL_NAME,
+  GITHUB_URL,
+  LINKEDIN_URL,
+  SITE_NAME,
+} from "@/lib/content";
+
+// Structured data so search engines can connect the name, role, school, and
+// social profiles. It lives in the server-rendered <head> because a
+// <script> inside the client page component is ignored by React on the
+// client (and triggers a console warning).
+const PERSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: FULL_NAME,
+  alternateName: SITE_NAME,
+  jobTitle: "Website Developer & Software Engineer",
+  email: `mailto:${EMAIL}`,
+  url: "/",
+  alumniOf: {
+    "@type": "EducationalOrganization",
+    name: "SMKN 1 Mejayan",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Madiun",
+    addressRegion: "East Java",
+    addressCountry: "ID",
+  },
+  knowsAbout: [
+    "Laravel",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "PHP",
+    "MySQL",
+    "Node.js",
+    "Web Development",
+  ],
+  sameAs: [GITHUB_URL, LINKEDIN_URL],
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -96,6 +138,10 @@ export default function RootLayout({
             season + language — avoids a flash of the default values. */}
         <script dangerouslySetInnerHTML={{ __html: SEASON_BOOT_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: LANG_BOOT_SCRIPT }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_LD) }}
+        />
       </head>
       <body
         className="min-h-full flex flex-col"

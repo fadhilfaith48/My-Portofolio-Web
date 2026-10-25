@@ -17,7 +17,6 @@ import { useLanguage } from "@/components/LanguageProvider";
 import {
   CV_FILES,
   EMAIL,
-  FULL_NAME,
   GITHUB_URL,
   LINKEDIN_URL,
   SITE_NAME,
@@ -51,40 +50,6 @@ function pick<T>(loc: { id: T; en: T }, lang: Lang): T {
   return loc[lang];
 }
 
-// Structured data so search engines can connect the name, role, school, and
-// social profiles. Kept in the page rather than layout because it describes
-// this specific page's content.
-const PERSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: FULL_NAME,
-  alternateName: SITE_NAME,
-  jobTitle: "Website Developer & Software Engineer",
-  email: `mailto:${EMAIL}`,
-  url: "/",
-  alumniOf: {
-    "@type": "EducationalOrganization",
-    name: "SMKN 1 Mejayan",
-  },
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Madiun",
-    addressRegion: "East Java",
-    addressCountry: "ID",
-  },
-  knowsAbout: [
-    "Laravel",
-    "Next.js",
-    "React",
-    "TypeScript",
-    "PHP",
-    "MySQL",
-    "Node.js",
-    "Web Development",
-  ],
-  sameAs: [GITHUB_URL, LINKEDIN_URL],
-};
-
 export default function Home() {
   const { t, lang } = useLanguage();
   const [activeProject, setActiveProject] = useState<Project | null>(null);
@@ -106,10 +71,6 @@ export default function Home() {
 
   return (
     <SmoothScroll>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_LD) }}
-      />
       <div className="relative">
         {/* Persistent 3D scene — fullscreen behind content; events must reach it. */}
         <div className="fixed inset-0 z-0">
