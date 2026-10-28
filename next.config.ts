@@ -31,6 +31,15 @@ const nextConfig: NextConfig = {
   // `node server.js`. Trims the final image to ~100 MB.
   output: "standalone",
 
+  // The container has no CDN in front of it, so Next does the image work
+  // itself (sharp is a dependency). AVIF first, WebP as the fallback — both
+  // are typically 40–70% smaller than the source PNG/JPEG that ships in
+  // /public. `minimumCacheTTL` keeps optimised variants around for a week.
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
+  },
+
   async headers() {
     return [
       {

@@ -3,6 +3,8 @@
 # ---------- deps ----------
 # Installs production + dev deps once so the cache survives source changes.
 # libc6-compat is required by Next.js' SWC binaries on Alpine.
+# sharp (image optimisation for next/image) resolves to its prebuilt
+# linux-musl binaries here, so no build toolchain is needed.
 FROM node:22-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -31,7 +33,10 @@ ENV HOSTNAME=0.0.0.0
 
 # Unprivileged user so a container breakout can't write to bind mounts with
 # root. 1001 is Next.js' conventional uid.
-RUN addgroup --system --gid 1001 nodejs \
+# libc6-compat is kept in the runtime stage too: Next's native bindings and
+# the sharp loader both link against glibc shims on musl.
+RUN apk add --no-cache libc6-compat \
+ && addgroup --system --gid 1001 nodejs \
  && adduser --system --uid 1001 nextjs
 
 # Standalone output does NOT include /public and /.next/static, we copy them
