@@ -34,9 +34,41 @@ const ICONS: Record<SeasonId, React.ReactNode> = {
   ),
 };
 
-export default function SeasonPicker({ className = "" }: { className?: string }) {
+export default function SeasonPicker({
+  className = "",
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
   const { id, setSeason } = useSeason();
   const { t } = useLanguage();
+
+  // Mobile variant: a single button that cycles through the seasons. The
+  // four-button row is too wide for a phone header, so it's only shown from
+  // `sm` upwards (see app/page.tsx).
+  if (compact) {
+    const current = SEASONS.find((s) => s.id === id) ?? SEASONS[0];
+    const label = t(`seasons.${current.id}`);
+
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          const i = SEASONS.findIndex((s) => s.id === id);
+          const next = SEASONS[(i + 1) % SEASONS.length];
+          setSeason(next.id);
+        }}
+        data-cursor="hover"
+        aria-label={`${t("picker.season")}: ${label}`}
+        title={label}
+        className={`inline-flex items-center justify-center w-8 h-8 rounded-full bg-ink-2/60 backdrop-blur-sm border border-ink-3 transition-colors hover:border-ice-500/60 ${className}`}
+        style={{ color: current.accent }}
+      >
+        {ICONS[current.id]}
+      </button>
+    );
+  }
 
   return (
     <div

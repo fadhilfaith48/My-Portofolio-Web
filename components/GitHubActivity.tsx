@@ -365,7 +365,7 @@ export default function GitHubActivity() {
   return (
     <section
       data-kb-highlights="github,git"
-      className="relative p-6 sm:p-10 md:p-14 pb-24"
+      className="relative overflow-hidden p-6 sm:p-10 md:p-14 pb-24"
     >
       {/* Subtle dark decorative ring behind the heatmap, bottom-right */}
       <span
