@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FrozenKeyboard from "@/components/FrozenKeyboard";
+import dynamic from "next/dynamic";
+import SceneBoundary from "@/components/SceneBoundary";
+import SceneFallback from "@/components/SceneFallback";
 import SmoothScroll from "@/components/smooth-scroll";
 import Reveal from "@/components/Reveal";
 import SectionNav from "@/components/SectionNav";
@@ -26,6 +28,14 @@ import {
   type Localised,
   type Project,
 } from "@/lib/content";
+
+// The 3D scene (three.js + drei + simple-icons) is by far the heaviest chunk.
+// Loading it dynamically keeps it out of the initial JS, so the text, theme
+// and language controls become interactive before the WebGL bundle arrives.
+const FrozenKeyboard = dynamic(() => import("@/components/FrozenKeyboard"), {
+  ssr: false,
+  loading: () => <SceneFallback />,
+});
 
 // Hero name split per word so each can rise independently. Whitespace
 // preserved as its own span so the line wraps naturally if needed.
@@ -74,7 +84,9 @@ export default function Home() {
       <div className="relative">
         {/* Persistent 3D scene — fullscreen behind content; events must reach it. */}
         <div className="fixed inset-0 z-0">
-          <FrozenKeyboard />
+          <SceneBoundary>
+            <FrozenKeyboard />
+          </SceneBoundary>
         </div>
 
         {/* Header */}

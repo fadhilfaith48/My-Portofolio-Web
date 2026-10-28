@@ -281,8 +281,8 @@ body {
   background: rgba(19, 31, 58, 0.55);
   color: var(--ice-100);
   border: 1px solid rgba(166, 197, 228, 0.2);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   overflow: hidden;
   isolation: isolate;
   transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0);
@@ -362,8 +362,8 @@ body {
   background: rgba(19, 31, 58, 0.55);
   color: var(--ice-100);
   border: 1px solid rgba(166, 197, 228, 0.2);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0);
   transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
     border-color 240ms ease, color 240ms ease, background 240ms ease,
@@ -391,8 +391,8 @@ body {
   color: var(--ice-100);
   background: rgba(19, 31, 58, 0.55);
   border: 1px solid rgba(166, 197, 228, 0.18);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   transition: transform 220ms ease, border-color 220ms ease,
     color 220ms ease, background 220ms ease;
 }
@@ -519,8 +519,8 @@ body {
   justify-content: center;
   padding: 1.5rem;
   background: rgba(5, 11, 22, 0.7);
-  backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 280ms ease;
@@ -716,4 +716,46 @@ body {
 .toast[data-show="true"] {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+
+/* ─── 3D scene fallback ───────────────────────────────────────────────── */
+
+.scene-fallback {
+  background:
+    radial-gradient(45% 30% at 50% 34%, var(--aurora-4), transparent 72%),
+    radial-gradient(55% 38% at 50% 68%, var(--aurora-1), transparent 70%);
+}
+.scene-fallback__glow {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  width: 52vmin;
+  height: 34vmin;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--aurora-2);
+  filter: blur(42px);
+  opacity: 0.55;
+}
+
+/* ─── Mobile performance ──────────────────────────────────────────────── */
+/* The desktop look is untouched; on phones we lower the most expensive
+   effects slightly so scrolling stays smooth on mid-range GPUs. */
+@media (max-width: 640px) {
+  .frozen-aurora {
+    filter: blur(10px);
+  }
+  .frozen-aurora--alt {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  .frost-btn,
+  .frost-chip,
+  .frost-icon,
+  .status-pill,
+  .backdrop-blur-sm,
+  .backdrop-blur-md {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
 }

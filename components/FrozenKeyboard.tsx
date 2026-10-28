@@ -14,10 +14,11 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
 } from "react";
 import { useSeason } from "@/components/SeasonProvider";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useIsCompact } from "@/lib/useCompact";
+import SceneFallback from "@/components/SceneFallback";
 import * as THREE from "three";
 import {
   siBootstrap,
@@ -36,31 +37,6 @@ import {
   siSpring,
   siTypescript,
 } from "simple-icons";
-
-// A device is treated as "compact" when it's phone-width OR a coarse-pointer
-// device up to tablet width. Using matchMedia (instead of only the width)
-// also catches phones in landscape, where `width < 768` is false even though
-// the screen is still small.
-const COMPACT_QUERY =
-  "(max-width: 767px), ((pointer: coarse) and (max-width: 1024px))";
-
-function subscribeCompact(callback: () => void) {
-  if (typeof window === "undefined") return () => {};
-  const mql = window.matchMedia(COMPACT_QUERY);
-  mql.addEventListener("change", callback);
-  return () => mql.removeEventListener("change", callback);
-}
-const getCompactSnapshot = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia(COMPACT_QUERY).matches;
-const getCompactServerSnapshot = () => false;
-function useIsCompact() {
-  return useSyncExternalStore(
-    subscribeCompact,
-    getCompactSnapshot,
-    getCompactServerSnapshot
-  );
-}
 
 // Per-section keyboard "states" — same idea as Naresh's animated-background-
 // config.ts, but for our R3F keyboard. Values are tweened toward via lerp
@@ -916,15 +892,45 @@ function Keyboard() {
   );
 }
 
+function hasWebGL() {
+  try {
+    const canvas = document.createElement("canvas");
+    const gl = (canvas.getContext("webgl2") ||
+      canvas.getContext("webgl")) as WebGLRenderingContext | null;
+    if (!gl) return false;
+    // Free the probe context immediately instead of waiting for GC.
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default function FrozenKeyboard() {
+  const compact = useIsCompact();
+  const [supported] = useState(() => hasWebGL());
+  const [contextLost, setContextLost] = useState(false);
+
+  if (!supported || contextLost) return <SceneFallback />;
+
   return (
     <Canvas
       camera={{ position: [1.5, 3.6, 11], fov: 22 }}
-      dpr={[1, 2]}
+      dpr={compact ? [1, 1.5] : [1, 2]}
       gl={{
-        antialias: true,
+        antialias: !compact,
         alpha: true,
         powerPreference: "high-performance",
+      }}
+      onCreated={({ gl }) => {
+        gl.domElement.addEventListener(
+          "webglcontextlost",
+          (event) => {
+            event.preventDefault();
+            setContextLost(true);
+          },
+          { once: true }
+        );
       }}
     >
       {/* Canvas is transparent so the FrozenBackground (snow + aurora) shows
@@ -933,7 +939,10 @@ export default function FrozenKeyboard() {
       {/* Local environment map built from Lightformer quads — no external
           HDR fetch, so the scene works offline. Gives the glass keycaps
           soft icy highlights without relying on drei's CDN. */}
-      <Environment resolution={128} environmentIntensity={0.25}>
+      <Environment
+        resolution={compact ? 64 : 128}
+        environmentIntensity={0.25}
+      >
         <Lightformer
           intensity={1.1}
           color="#ffffff"

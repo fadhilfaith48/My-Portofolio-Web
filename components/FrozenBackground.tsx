@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useSeason } from "@/components/SeasonProvider";
+import { useIsCompact } from "@/lib/useCompact";
 
 // Palette particle colours are authored as "rgba(r, g, b, a)". We want to
 // paint each flake at its own per-flake alpha, so we strip the authored
@@ -25,6 +26,7 @@ export default function FrozenBackground() {
   const { palette } = useSeason();
   const particleColor = palette.particle;
   const haloColor = palette.particleHalo;
+  const compact = useIsCompact();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,7 +34,7 @@ export default function FrozenBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, compact ? 1.5 : 2);
     let w = window.innerWidth;
     let h = window.innerHeight;
 
@@ -50,8 +52,12 @@ export default function FrozenBackground() {
     let flakes: Flake[] = [];
 
     const seed = () => {
-      // Density tuned to viewport area, capped on either end.
-      const target = Math.min(140, Math.max(50, Math.floor((w * h) / 18000)));
+      // Density tuned to viewport area, capped on either end. Compact devices
+      // get roughly half the flakes so the 2D canvas doesn't compete with the
+      // WebGL scene for the same GPU/CPU budget.
+      const target = compact
+        ? Math.min(70, Math.max(36, Math.floor((w * h) / 26000)))
+        : Math.min(140, Math.max(50, Math.floor((w * h) / 18000)));
       flakes = Array.from({ length: target }, () => makeFlake(true));
     };
 
@@ -90,7 +96,7 @@ export default function FrozenBackground() {
       mx = (e.clientX / w - 0.5) * 2;
       my = (e.clientY / h - 0.5) * 2;
     };
-    window.addEventListener("mousemove", onMove);
+    if (!compact) window.addEventListener("mousemove", onMove);
 
     let raf = 0;
     let last = performance.now();
@@ -136,8 +142,9 @@ export default function FrozenBackground() {
         ctx.arc(px, py, f.r, 0, Math.PI * 2);
         ctx.fill();
 
-        // Soft halo on the larger flakes.
-        if (f.r > 1.6) {
+        // Soft halo on the larger flakes. Skipped on compact devices — the
+        // extra blurred circle per flake is pure fill-rate cost.
+        if (!compact && f.r > 1.6) {
           ctx.beginPath();
           ctx.fillStyle = particleRgba(haloColor, f.alpha * 0.2);
           ctx.arc(px, py, f.r * 3, 0, Math.PI * 2);
@@ -155,7 +162,7 @@ export default function FrozenBackground() {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [particleColor, haloColor]);
+  }, [particleColor, haloColor, compact]);
 
   return (
     <div
