@@ -28,7 +28,7 @@ export default function LanguagePicker({
             onClick={() => setLang(code)}
             data-cursor="hover"
             aria-pressed={active}
-            className={`px-3 sm:px-2.5 h-8 sm:h-6 rounded-full text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 ${
+            className={`px-3 sm:px-2.5 h-10 sm:h-6 rounded-full text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 ${
               active
                 ? "bg-ice-100 text-background"
                 : "text-ice-300 hover:text-ice-50"

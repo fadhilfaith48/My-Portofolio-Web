@@ -62,7 +62,7 @@ export default function SeasonPicker({
         data-cursor="hover"
         aria-label={`${t("picker.season")}: ${label}`}
         title={label}
-        className={`inline-flex items-center justify-center w-8 h-8 rounded-full bg-ink-2/60 backdrop-blur-sm border border-ink-3 transition-colors hover:border-ice-500/60 ${className}`}
+        className={`inline-flex items-center justify-center w-10 h-10 rounded-full bg-ink-2/60 backdrop-blur-sm border border-ink-3 transition-colors hover:border-ice-500/60 ${className}`}
         style={{ color: current.accent }}
       >
         {ICONS[current.id]}
@@ -88,7 +88,7 @@ export default function SeasonPicker({
             aria-label={label}
             aria-pressed={active}
             title={label}
-            className={`group relative w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${
+            className={`season-btn group relative w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${
               active
                 ? "text-background scale-110"
                 : "text-ice-300 hover:text-ice-50"

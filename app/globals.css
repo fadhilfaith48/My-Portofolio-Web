@@ -598,6 +598,10 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  /* Horizontal drags move slides; vertical drags still scroll the page. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .carousel__track {
   display: flex;
@@ -687,6 +691,19 @@ body {
   min-height: 0;
 }
 
+/* ─── Tappable project card ───────────────────────────────────────────── */
+
+/* The whole card opens the project modal (see app/page.tsx); the
+   "Lihat selengkapnya" button remains the keyboard/AT control. */
+.project-card {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 140ms ease;
+}
+.project-card:active {
+  opacity: 0.9;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .project-modal,
   .project-modal__dialog {
@@ -757,5 +774,59 @@ body {
   .backdrop-blur-md {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+  }
+}
+
+/* ─── Touch targets ───────────────────────────────────────────────────── */
+/* Phone-sized screens: grow the tappable boxes without changing the
+   visual size of the dots/icons. Desktop is untouched. */
+@media (max-width: 767px) {
+  .carousel__nav {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .project-modal__close {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  /* 36px hit box around the 8px dot, so the dots stay as quiet as before
+     but are actually reachable with a thumb. */
+  .carousel__dot {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: transparent;
+  }
+  .carousel__dot::after {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: rgba(234, 242, 251, 0.4);
+    transition: background 200ms ease, transform 200ms ease;
+  }
+  .carousel__dot--active {
+    background: transparent;
+    transform: none;
+  }
+  .carousel__dot--active::after {
+    background: var(--ice-100);
+    transform: scale(1.25);
+  }
+  .carousel__dots {
+    gap: 0;
+    bottom: 0.125rem;
+  }
+}
+
+/* Coarse-pointer tablets still get the four-button season row in the
+   desktop header; grow it for fingers without changing the visual design. */
+@media (hover: none) and (pointer: coarse) {
+  .season-btn {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }

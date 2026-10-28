@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+
+// Horizontal drag distance (px) that counts as a slide change. Large enough
+// that a sloppy tap or a mostly-vertical scroll never flips a slide.
+const SWIPE_THRESHOLD = 40;
 
 type Props = {
   media?: string[];
@@ -37,11 +41,51 @@ export default function Carousel({ media, projectNum, altPrefix = "Screenshot" }
     setIdx((i) => (i + delta + slides.length) % slides.length);
   };
 
+  // Swipe support (touch + pen + mouse drag). Pointer capture keeps the
+  // pointerup on this element even when the finger lifts outside it. Vertical
+  // movement is ignored so the page can still be scrolled over the carousel;
+  // `touch-action: pan-y` in the CSS backs that up at the gesture level.
+  const dragOrigin = useRef<{ x: number; y: number } | null>(null);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (slides.length <= 1) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    // Never swallow taps on the prev/next/dot buttons.
+    if ((e.target as HTMLElement).closest("button")) return;
+    dragOrigin.current = { x: e.clientX, y: e.clientY };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setPaused(true);
+  };
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const origin = dragOrigin.current;
+    dragOrigin.current = null;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    if (!origin) {
+      setPaused(false);
+      return;
+    }
+    const dx = e.clientX - origin.x;
+    const dy = e.clientY - origin.y;
+    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+      go(dx < 0 ? 1 : -1);
+    }
+    setPaused(false);
+  };
+
   return (
     <div
       className="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onPointerDown={onPointerDown}
+      onPointerUp={endDrag}
+      onPointerCancel={() => {
+        dragOrigin.current = null;
+        setPaused(false);
+      }}
     >
       <div
         className="carousel__track"
@@ -60,6 +104,7 @@ export default function Carousel({ media, projectNum, altPrefix = "Screenshot" }
                 fill
                 sizes="(max-width: 768px) 92vw, 1024px"
                 loading="lazy"
+                draggable={false}
               />
             ) : (
               // Placeholder — each slide uses a different gradient origin so
