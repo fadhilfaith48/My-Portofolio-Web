@@ -17,7 +17,7 @@ export default function AboutSection() {
     <section
       id="about"
       data-kb-section="about"
-      className="scroll-mt-24 relative min-h-screen flex items-start lg:items-center px-6 sm:px-10 md:px-14 pt-28 pb-16 lg:py-14"
+      className="scroll-mt-24 relative min-h-svh flex items-start lg:items-center px-6 sm:px-10 md:px-14 pt-28 pb-16 lg:py-14"
     >
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] gap-8 lg:gap-12 items-center">
         <div>

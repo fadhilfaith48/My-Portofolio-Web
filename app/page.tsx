@@ -124,7 +124,7 @@ export default function Home() {
           <section
             id="hero"
             data-kb-section="hero"
-            className="scroll-mt-24 min-h-screen flex flex-col justify-center p-6 sm:p-10 md:p-14"
+            className="scroll-mt-24 min-h-svh flex flex-col justify-center p-6 sm:p-10 md:p-14"
           >
             <div className="mt-20">
               <p
@@ -232,7 +232,7 @@ export default function Home() {
             data-kb-section="stack"
             className="scroll-mt-24 relative p-6 sm:p-10 md:p-14"
           >
-            <div className="relative h-[120vh]">
+            <div className="relative h-[120svh]">
               <div className="sticky top-24 sm:top-28 text-center">
                 <Reveal>
                   <h2 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-[-0.03em] text-ice-50 leading-[0.95]">
@@ -353,7 +353,7 @@ export default function Home() {
               id={p.section}
               data-kb-section={p.section}
               data-kb-highlights={(p.highlights ?? []).join(",")}
-              className="scroll-mt-24 relative min-h-screen flex items-center p-6 sm:p-10 md:p-14 overflow-hidden"
+              className="scroll-mt-24 relative min-h-svh flex items-center p-6 sm:p-10 md:p-14 overflow-hidden"
             >
               <span
                 aria-hidden
@@ -459,7 +459,7 @@ export default function Home() {
           <section
             id="github"
             data-kb-section="github"
-            className="scroll-mt-24 relative min-h-screen p-6 sm:p-10 md:p-14 pb-24"
+            className="scroll-mt-24 relative min-h-svh p-6 sm:p-10 md:p-14 pb-24"
           >
             <GitHubActivity />
           </section>
@@ -469,7 +469,7 @@ export default function Home() {
           <section
             id="contact"
             data-kb-section="contact"
-            className="scroll-mt-24 relative min-h-screen flex flex-col justify-center p-6 sm:p-10 md:p-14 overflow-hidden"
+            className="scroll-mt-24 relative min-h-svh flex flex-col justify-center p-6 sm:p-10 md:p-14 overflow-hidden"
           >
             <div className="max-w-xl relative">
               <Reveal>

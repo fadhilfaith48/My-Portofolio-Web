@@ -72,7 +72,7 @@ export default function SectionNav() {
   return (
     <nav
       aria-label={t("nav.aria")}
-      className="hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-3 pointer-events-auto"
+      className="hidden md:flex [@media(max-height:640px)]:!hidden fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-3 pointer-events-auto"
     >
       {SECTIONS.map((s) => {
         const isActive = active === s.id;

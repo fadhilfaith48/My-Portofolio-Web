@@ -37,15 +37,28 @@ import {
   siTypescript,
 } from "simple-icons";
 
-const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-const subscribeMobile = () => () => {};
-const getMobileSnapshot = () => mobileRegex.test(navigator.userAgent);
-const getMobileServerSnapshot = () => false;
-function useIsMobile() {
+// A device is treated as "compact" when it's phone-width OR a coarse-pointer
+// device up to tablet width. Using matchMedia (instead of only the width)
+// also catches phones in landscape, where `width < 768` is false even though
+// the screen is still small.
+const COMPACT_QUERY =
+  "(max-width: 767px), ((pointer: coarse) and (max-width: 1024px))";
+
+function subscribeCompact(callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const mql = window.matchMedia(COMPACT_QUERY);
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+}
+const getCompactSnapshot = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia(COMPACT_QUERY).matches;
+const getCompactServerSnapshot = () => false;
+function useIsCompact() {
   return useSyncExternalStore(
-    subscribeMobile,
-    getMobileSnapshot,
-    getMobileServerSnapshot
+    subscribeCompact,
+    getCompactSnapshot,
+    getCompactServerSnapshot
   );
 }
 
@@ -497,7 +510,7 @@ function playKeyClick(seed = 0) {
 function Keycap({
   geometry,
   position,
-  isMobile,
+  compact,
   icon,
   onHoverChange,
   hovered,
@@ -509,7 +522,7 @@ function Keycap({
 }: {
   geometry: THREE.BufferGeometry;
   position: [number, number, number];
-  isMobile: boolean;
+  compact: boolean;
   icon: SkillIcon;
   onHoverChange: (hovered: boolean) => void;
   hovered: boolean;
@@ -644,7 +657,7 @@ function Keycap({
             color="#ffffff"
             transmission={0}
             roughness={0.32}
-            clearcoat={isMobile ? 0 : 0.5}
+            clearcoat={compact ? 0 : 0.5}
             clearcoatRoughness={0.18}
             metalness={0}
             emissive="#ffffff"
@@ -671,7 +684,7 @@ function Keycap({
 
 function Keyboard() {
   const ref = useRef<THREE.Group>(null);
-  const isMobile = useIsMobile();
+  const compact = useIsCompact();
   const { palette } = useSeason();
   const { t } = useLanguage();
   const [activeSection, activeSectionRef, highlightsRef] = useActiveSection();
@@ -744,15 +757,14 @@ function Keyboard() {
     const isShowcase =
       activeSectionRef.current === "hero" ||
       activeSectionRef.current === "contact";
-    // Narrow viewports have a much smaller horizontal field of view, so the
-    // same world-space keyboard covers the copy. Scale it down, pull it back
-    // towards the centre, and drop it below the copy on phones. The About
-    // section is text-heavy, so the keyboard steps aside entirely there.
-    const portrait = state.size.width < 768;
-    const hideOnPortrait = portrait && activeSectionRef.current === "about";
-    const sizeScale = hideOnPortrait ? 0.02 : portrait ? 0.42 : 1;
-    const positionScale = portrait ? 0.2 : 1;
-    const yOffset = portrait ? -1.4 : 0;
+    // Compact devices (phones in portrait or landscape, small tablets) have a
+    // much smaller field of view, so the same world-space keyboard covers the
+    // copy. Scale it down, pull it back towards the centre, and drop it below
+    // the copy. About is text-heavy, so the keyboard steps aside entirely.
+    const hideOnCompact = compact && activeSectionRef.current === "about";
+    const sizeScale = hideOnCompact ? 0.02 : compact ? 0.42 : 1;
+    const positionScale = compact ? 0.2 : 1;
+    const yOffset = compact ? -1.4 : 0;
     const yawSwing = isShowcase ? 0.5 : 0.025;
     const pitchSwing = isShowcase ? 0.07 : 0.0;
     const rollSwing = isShowcase ? 0.05 : 0.0;
@@ -820,7 +832,7 @@ function Keyboard() {
           key={id}
           geometry={keycapGeom}
           position={[x, keycapY, z]}
-          isMobile={isMobile}
+          compact={compact}
           icon={icon}
           hovered={hoveredKey === id}
           highlightsRef={highlightsRef}
