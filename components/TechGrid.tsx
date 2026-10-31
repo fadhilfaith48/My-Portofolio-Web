@@ -2,6 +2,7 @@
 
 import {
   siCss,
+  siDocker,
   siGit,
   siGithub,
   siGo,
@@ -18,6 +19,8 @@ import {
   siPython,
   siReact,
   siRedis,
+  siSpringboot,
+  siSupabase,
   siTailwindcss,
   siTypescript,
   siVercel,
@@ -40,17 +43,20 @@ const ICONS: Record<string, { path: string; title: string }> = {
   laravel: siLaravel,
   php: siPhp,
   nodedotjs: siNodedotjs,
+  springboot: siSpringboot,
   go: siGo,
   openjdk: siOpenjdk,
   python: siPython,
   mysql: siMysql,
   postgresql: siPostgresql,
   redis: siRedis,
+  supabase: siSupabase,
   git: siGit,
   github: siGithub,
   xampp: siXampp,
   laragon: siLaragon,
   vercel: siVercel,
+  docker: siDocker,
 };
 
 // `simple-icons` v16 dropped the VS Code mark (Microsoft brand request), so

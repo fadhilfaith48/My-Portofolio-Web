@@ -514,6 +514,7 @@ export const techGroups: Array<{ title: Localised; items: TechItem[] }> = [
       { name: "Laravel", icon: "laravel" },
       { name: "PHP", icon: "php" },
       { name: "Node.js", icon: "nodedotjs" },
+      { name: "Spring Boot", icon: "springboot" },
       { name: "Go", icon: "go" },
       { name: "Java", icon: "openjdk" },
       { name: "Python", icon: "python" },
@@ -525,6 +526,7 @@ export const techGroups: Array<{ title: Localised; items: TechItem[] }> = [
       { name: "MySQL", icon: "mysql" },
       { name: "PostgreSQL", icon: "postgresql" },
       { name: "Redis", icon: "redis" },
+      { name: "Supabase", icon: "supabase" },
     ],
   },
   {
@@ -536,6 +538,7 @@ export const techGroups: Array<{ title: Localised; items: TechItem[] }> = [
       { name: "XAMPP", icon: "xampp" },
       { name: "Laragon", icon: "laragon" },
       { name: "Vercel", icon: "vercel" },
+      { name: "Docker Desktop", icon: "docker" },
     ],
   },
 ];
