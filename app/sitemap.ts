@@ -1,15 +1,24 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
+import { projects } from "@/lib/content";
 
-// Single-page portfolio. Project case-study routes (/projects/[slug]) get
-// appended here once they land in phase 2.
+// Single-page portfolio plus one static case-study route per project. Keeping
+// the project URLs here is what makes them discoverable beyond the modal.
 export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+
   return [
     {
       url: SITE_URL,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "monthly",
       priority: 1,
     },
+    ...projects.map((project) => ({
+      url: `${SITE_URL}/projects/${project.slug}`,
+      lastModified,
+      changeFrequency: "yearly" as const,
+      priority: 0.7,
+    })),
   ];
 }

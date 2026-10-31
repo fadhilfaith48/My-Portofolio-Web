@@ -115,6 +115,31 @@ export const DICT = {
     viewCode: { id: "Lihat kode", en: "View code" },
     close: { id: "Tutup", en: "Close" },
     stackLabel: { id: "Stack", en: "Stack" },
+    // Detail page (/projects/[slug])
+    back: { id: "Semua proyek", en: "All projects" },
+    openPage: { id: "Buka halaman proyek", en: "Open project page" },
+    summaryLabel: { id: "Ringkasan", en: "Overview" },
+    impactLabel: { id: "Dampak", en: "Impact" },
+    previous: { id: "Proyek sebelumnya", en: "Previous project" },
+    next: { id: "Proyek berikutnya", en: "Next project" },
+    ctaTitle: {
+      id: "Tertarik kerja sama?",
+      en: "Interested in working together?",
+    },
+    ctaBody: {
+      id: "Saya terbuka untuk magang, freelance, dan kolaborasi proyek web.",
+      en: "I'm open to internships, freelance work, and web project collaborations.",
+    },
+    ctaAction: { id: "Hubungi saya", en: "Get in touch" },
+  },
+  notFound: {
+    kicker: { id: "404", en: "404" },
+    title: { id: "Halaman tidak ditemukan", en: "Page not found" },
+    body: {
+      id: "Alamat ini tidak ada, atau proyeknya sudah dipindahkan.",
+      en: "This address doesn't exist, or the project has moved.",
+    },
+    back: { id: "Kembali ke beranda", en: "Back to home" },
   },
   contact: {
     kicker: { id: "kontak", en: "contact" },
